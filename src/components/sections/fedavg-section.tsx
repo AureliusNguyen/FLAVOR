@@ -147,7 +147,7 @@ export function FedAvgSection({ currentStep }: FedAvgSectionProps) {
                       style={{ backgroundColor: client.color }}
                     />
                     <span className="font-mono text-xs">
-                      Δw_{idx + 1} × {(client.dataSize / 1000).toFixed(3)}
+                      <MathTex>{`\\Delta w_{${idx + 1}} \\times ${(client.dataSize / 1000).toFixed(3)}`}</MathTex>
                     </span>
                   </div>
                 ))}
