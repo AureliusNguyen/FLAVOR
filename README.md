@@ -2,7 +2,8 @@
 
 **Federated Learning Analytics, Visualization, Optimization & Reliability**
 
-An interactive visualization of privacy-preserving federated learning with Shamir Secret Sharing.
+FLAVOR is a tool for visualizing and understanding the privacy-preserving properties and optimization techniques used in federated learning.
+App live at https://flavor-studio.vercel.app/
 
 ## Features
 
