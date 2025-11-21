@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FLAVOR
+
+**Federated Learning Analytics, Visualization, Optimization & Reliability**
+
+An interactive visualization of privacy-preserving federated learning with Shamir Secret Sharing.
+
+## Features
+
+- **9 Interactive Sections** with 38 total steps
+- **Shamir Secret Sharing Scheme** implementation (7-of-10 threshold)
+- **FedAvg Algorithm** visualization
+- **MNIST Dataset** simulation with non-IID distribution
+- **Dark/Light Theme** toggle
+- **Keyboard Navigation** (Arrow keys, Space)
+
+## Sections
+
+1. **Intro** - What is Federated Learning?
+2. **Data Distribution** - MNIST across 10 clients
+3. **Local Training** - Client-side model training
+4. **Shamir Secret Sharing** - Deep dive into the cryptography
+5. **Secure Aggregation** - Combining shares privately
+6. **FedAvg** - Weighted averaging algorithm
+7. **Global Model** - Model update process
+8. **Convergence** - Multi-round training progress
+9. **Summary** - Results and next steps
+
+## Tech Stack
+
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **Tailwind CSS** + **shadcn/ui**
+- **Framer Motion** (animations)
+- **D3.js** (visualizations ready)
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
