@@ -1,11 +1,12 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Loader2, AlertTriangle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, AlertTriangle, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { motion } from "framer-motion";
 import { useVisualization } from "@/context/visualization-context";
+import Link from "next/link";
 
 interface NavigationControlsProps {
   currentSection: number;
@@ -42,22 +43,16 @@ export function NavigationControls({
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
+        className="fixed top-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-md border-b border-gray-700"
       >
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-sm text-muted-foreground">
-              Made by{" "}
-              <a
-                href="https://www.linkedin.com/in/aurelius-nguyen/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-1 py-0.5 rounded-md transition-colors hover:bg-foreground hover:text-background"
-              >
-                Aurelius Nguyen
-              </a>{" "}
-              with ❤️
-            </div>
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-gray-800 gap-2">
+                <Home className="h-4 w-4" />
+                Home
+              </Button>
+            </Link>
             <ThemeToggle />
           </div>
 
@@ -74,10 +69,10 @@ export function NavigationControls({
                     px-3 py-1 text-xs rounded-full whitespace-nowrap transition-all
                     ${
                       index === currentSection
-                        ? "bg-foreground text-background font-medium"
+                        ? "bg-purple-500 text-white font-medium"
                         : index < currentSection
-                        ? "bg-muted text-muted-foreground hover:bg-muted/80 cursor-pointer"
-                        : "text-muted-foreground/50 cursor-not-allowed"
+                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600 cursor-pointer"
+                        : "text-gray-500 cursor-not-allowed"
                     }
                   `}
                 >
@@ -89,7 +84,7 @@ export function NavigationControls({
         </div>
 
         {/* Global progress bar */}
-        <Progress value={globalProgress} className="h-0.5 rounded-none" />
+        <Progress value={globalProgress} className="h-0.5 rounded-none bg-gray-700" />
       </motion.header>
 
       {/* Skip warning banner */}
@@ -110,7 +105,7 @@ export function NavigationControls({
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-t border-border"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-gray-900/90 backdrop-blur-md border-t border-gray-700"
       >
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -119,7 +114,7 @@ export function NavigationControls({
               size="lg"
               onClick={onPrev}
               disabled={!canGoPrev || isBlocked}
-              className="gap-2"
+              className="gap-2 border-gray-600 text-gray-300 hover:text-white hover:bg-gray-800 disabled:opacity-50"
             >
               {isBlocked ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -130,10 +125,10 @@ export function NavigationControls({
             </Button>
 
             <div className="flex flex-col items-center gap-1">
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-white">
                 {isBlocked ? blockReason : sectionTitles[currentSection]}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-gray-400">
                 {isBlocked
                   ? "Please wait..."
                   : `Step ${currentStep + 1} of ${currentStepsInSection}`}
@@ -145,7 +140,7 @@ export function NavigationControls({
               size="lg"
               onClick={onNext}
               disabled={!canGoNext || isBlocked}
-              className="gap-2"
+              className="gap-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
             >
               Next
               {isBlocked ? (

@@ -18,7 +18,9 @@ const CLIENT_COLORS = [
 ];
 
 // Generate synthetic MNIST-like pixel data (28x28 = 784 pixels)
-function generateDigitPixels(digit: number): number[] {
+// Returns pixel values in range [0, 255] for synthetic display
+// or [0, 1] for normalized display (when normalized=true)
+export function generateDigitPixels(digit: number, normalized: boolean = false): number[] {
   const pixels = new Array(784).fill(0);
 
   // Simplified digit patterns (just for visualization)
@@ -46,6 +48,11 @@ function generateDigitPixels(digit: number): number[] {
         if (idx + 28 < 784) pixels[idx + 28] = 150 + Math.floor(Math.random() * 50);
       }
     }
+  }
+
+  // Normalize to [0, 1] range if requested (for MNISTImage component)
+  if (normalized) {
+    return pixels.map(p => p / 255);
   }
 
   return pixels;
