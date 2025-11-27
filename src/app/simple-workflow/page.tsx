@@ -7,19 +7,19 @@ import { SectionWrapper } from '@/components/section-wrapper';
 import { useVisualization } from '@/context/visualization-context';
 
 // Sections
-import { HeroSection } from '@/components/sections/hero-section';
-import { DataDistributionSection } from '@/components/sections/data-distribution-section';
-import { LocalTrainingSection } from '@/components/sections/local-training-section';
-import { ShamirSection } from '@/components/sections/shamir-section';
-import { SecureAggregationSection } from '@/components/sections/secure-aggregation-section';
-import { FedAvgSection } from '@/components/sections/fedavg-section';
-import { GlobalModelSection } from '@/components/sections/global-model-section';
-import { ConvergenceSection } from '@/components/sections/convergence-section';
-import { SummarySection } from '@/components/sections/summary-section';
+import { HeroSection } from '@/components/sections/simplified-workflow/hero-section';
+import { DataDistributionSection } from '@/components/sections/simplified-workflow/data-distribution-section';
+import { LocalTrainingSection } from '@/components/sections/simplified-workflow/local-training-section';
+import { ShamirSection } from '@/components/sections/simplified-workflow/shamir-section';
+import { SecureAggregationSection } from '@/components/sections/simplified-workflow/secure-aggregation-section';
+import { FedAvgSection } from '@/components/sections/simplified-workflow/fedavg-section';
+import { GlobalModelSection } from '@/components/sections/simplified-workflow/global-model-section';
+import { ConvergenceSection } from '@/components/sections/simplified-workflow/convergence-section';
+import { SummarySection } from '@/components/sections/simplified-workflow/summary-section';
 
 // Section configuration
 const sections = [
-  { id: 'hero', title: 'Intro', steps: 4, component: HeroSection },
+  { id: 'hero', title: 'Intro', steps: 3, component: HeroSection },
   { id: 'data', title: 'Data', steps: 4, component: DataDistributionSection },
   { id: 'training', title: 'Training', steps: 4, component: LocalTrainingSection },
   { id: 'shamir', title: 'Shamir SSS', steps: 7, component: ShamirSection },
@@ -54,7 +54,7 @@ export default function Home() {
   const globalProgress = (navigation.getCurrentGlobalStep() / (navigation.getTotalSteps() - 1)) * 100;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+    <main className="min-h-screen bg-background relative overflow-hidden">
       <NavigationControls
         currentSection={navigation.currentSection}
         currentStep={navigation.currentStep}

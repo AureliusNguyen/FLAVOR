@@ -64,12 +64,12 @@ export function BonawitzDataSection({ currentStep }: Props) {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh]">
-        <Card className="p-8 text-center bg-gray-800 border-gray-700">
+        <Card className="p-8 text-center bg-card border-border">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-purple-400" />
-          <h3 className="font-semibold mb-2 text-white">
+          <h3 className="font-semibold mb-2 text-foreground">
             Loading Real MNIST Data
           </h3>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             Fetching 65,000 handwritten digit images...
           </p>
           <Progress value={progress} className="w-64" />
@@ -82,11 +82,11 @@ export function BonawitzDataSection({ currentStep }: Props) {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh]">
-        <Card className="p-8 text-center bg-gray-800 border-gray-700">
+        <Card className="p-8 text-center bg-card border-border">
           <h3 className="font-semibold mb-2 text-red-400">
             Error Loading MNIST
           </h3>
-          <p className="text-sm text-gray-400 mb-4">{error}</p>
+          <p className="text-sm text-muted-foreground mb-4">{error}</p>
           <Button onClick={loadData} variant="outline">
             Retry
           </Button>
@@ -96,20 +96,20 @@ export function BonawitzDataSection({ currentStep }: Props) {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-white">
+    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-foreground">
       {/* Step 0: Configure Parameters & Non-IID Introduction */}
       <StepContent isActive={currentStep === 0} stepIndex={0}>
         <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Protocol Configuration</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Set up the secure aggregation parameters
             </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Parameters</CardTitle>
+              <CardTitle className="text-foreground">Parameters</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -128,7 +128,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                     }
                     className="w-full accent-blue-500"
                   />
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Total participating clients
                   </p>
                 </div>
@@ -148,7 +148,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                     }
                     className="w-full accent-blue-500"
                   />
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Minimum clients needed for reconstruction (<MathTex>{"T > N/2"}</MathTex>)
                   </p>
                 </div>
@@ -168,7 +168,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                     }
                     className="w-full accent-blue-500"
                   />
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Size of gradient vectors
                   </p>
                 </div>
@@ -186,44 +186,44 @@ export function BonawitzDataSection({ currentStep }: Props) {
                       setConfig({ ...config, R: parseInt(value) })
                     }
                   >
-                    <SelectTrigger className="w-full bg-gray-900 border-gray-600 text-white">
+                    <SelectTrigger className="w-full bg-muted border-border text-foreground">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-900 border-gray-600">
+                    <SelectContent className="bg-card border-border">
                       <SelectItem
                         value="65536"
-                        className="text-white hover:bg-gray-800 focus:bg-gray-800"
+                        className="text-foreground hover:bg-accent focus:bg-accent"
                       >
                         <MathTex>{"2^{16}"}</MathTex> (65,536)
                       </SelectItem>
                       <SelectItem
                         value="16777216"
-                        className="text-white hover:bg-gray-800 focus:bg-gray-800"
+                        className="text-foreground hover:bg-accent focus:bg-accent"
                       >
                         <MathTex>{"2^{24}"}</MathTex> (16,777,216)
                       </SelectItem>
                       <SelectItem
                         value="4294967296"
-                        className="text-white hover:bg-gray-800 focus:bg-gray-800"
+                        className="text-foreground hover:bg-accent focus:bg-accent"
                       >
                         <MathTex>{"2^{32}"}</MathTex> (4,294,967,296)
                       </SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Modular arithmetic ring
                   </p>
                 </div>
               </div>
 
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-muted p-4 rounded-lg">
                 <h4 className="font-semibold mb-2 text-center">
                   Security Requirement
                 </h4>
                 <MathBlock>
                   {"T > \\frac{N}{2} \\quad \\text{(honest majority)}"}
                 </MathBlock>
-                <p className="text-xs text-center mt-2 text-gray-400">
+                <p className="text-xs text-center mt-2 text-muted-foreground">
                   At least <MathTex>{`T = ${config.T}`}</MathTex> out of{" "}
                   <MathTex>{`N = ${config.N}`}</MathTex> clients must remain
                   honest and online
@@ -233,13 +233,13 @@ export function BonawitzDataSection({ currentStep }: Props) {
           </Card>
 
           {/* Non-IID Introduction */}
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <h3 className="font-semibold text-lg">
                   Non-IID Data Distribution
                 </h3>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-foreground/80">
                   In real federated learning, data is rarely identically
                   distributed. Each client has a unique data distribution based
                   on their local context (e.g., different patient demographics
@@ -249,7 +249,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
 
                 {/* Show sample real MNIST images */}
                 {mnistClientData.length > 0 && (
-                  <div className="bg-gray-900 p-4 rounded-lg">
+                  <div className="bg-muted p-4 rounded-lg">
                     <h4 className="font-semibold mb-3 text-center">
                       Sample MNIST Images
                     </h4>
@@ -260,16 +260,16 @@ export function BonawitzDataSection({ currentStep }: Props) {
                             <MNISTImage
                               pixels={img.pixels}
                               size={40}
-                              className="rounded border border-gray-700"
+                              className="rounded border border-border"
                             />
-                            <span className="text-xs text-gray-400 mt-1">
+                            <span className="text-xs text-muted-foreground mt-1">
                               {img.label}
                             </span>
                           </div>
                         ))
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-3 text-center">
+                    <p className="text-xs text-muted-foreground mt-3 text-center">
                       Actual MNIST images from the dataset (28x28 grayscale)
                     </p>
                   </div>
@@ -287,7 +287,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
             <h2 className="text-3xl font-bold mb-2">
               {config.N} Federated Clients
             </h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Each client holds {mnistClientData[0]?.images.length || 500} real
               MNIST samples with skewed distributions
             </p>
@@ -304,7 +304,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                   transition={{ delay: idx * 0.05 }}
                 >
                   <Card
-                    className="p-4 text-center bg-gray-800 border-2"
+                    className="p-4 text-center bg-card border-2"
                     style={{ borderColor: client.color }}
                   >
                     <div
@@ -316,7 +316,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                     <p className="text-md font-medium truncate">
                       {client.name}
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-muted-foreground">
                       {clientMnist?.images.length || 0} samples
                     </p>
 
@@ -333,7 +333,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                             />
                           ))}
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-muted-foreground">
                           x {Math.floor((clientMnist.images.length || 0) / 5)}
                         </span>
                       </div>
@@ -344,9 +344,9 @@ export function BonawitzDataSection({ currentStep }: Props) {
             })}
           </div>
 
-          <Card className="bg-purple-900/30 border-purple-500">
-            <CardContent className="pt-6">
-              <p className="text-sm text-center text-purple-200">
+          <Card className="bg-purple-500/20 border-purple-500/30 dark:bg-purple-900/30 dark:border-purple-500">
+            <CardContent className="flex items-center justify-center">
+              <p className="text-sm text-center text-purple-900 dark:text-purple-200">
                 <strong>Medical Scenario:</strong> Each hospital/clinic has
                 patient data skewed toward certain conditions based on their
                 specialty and demographics.
@@ -363,16 +363,16 @@ export function BonawitzDataSection({ currentStep }: Props) {
             <h2 className="text-3xl font-bold mb-2">
               Data Distribution Matrix
             </h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Real digit frequency per client (darker = more samples)
             </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700 p-6 overflow-x-auto">
+          <Card className="bg-card border-border p-6 overflow-x-auto">
             <div className="min-w-[600px]">
               {/* Header row */}
               <div className="flex mb-2">
-                <div className="w-24 text-xs font-medium text-gray-400">
+                <div className="w-24 text-xs font-medium text-muted-foreground">
                   Client
                 </div>
                 {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
@@ -447,10 +447,14 @@ export function BonawitzDataSection({ currentStep }: Props) {
             </div>
           </Card>
 
-          <p className="text-xs text-center text-gray-400">
-            Notice how each client has different primary digits - this is
-            non-IID distribution
-          </p>
+          <Card className="bg-purple-500/20 border-purple-500/30 dark:bg-purple-900/30 dark:border-purple-500">
+            <CardContent className="flex items-center justify-center">
+              <p className="text-sm text-center text-purple-900 dark:text-purple-200">
+                Notice how each client has different primary digits - this is
+                non-IID distribution
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </StepContent>
 
@@ -459,7 +463,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
         <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Client Data Samples</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Actual MNIST images and resulting gradient vectors
             </p>
           </div>
@@ -477,7 +481,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                   transition={{ delay: clientIdx * 0.05 }}
                 >
                   <Card
-                    className="p-3 bg-gray-800 border-2"
+                    className="p-3 bg-card border-2"
                     style={{ borderColor: client.color }}
                   >
                     <div className="flex items-center gap-2 mb-2">
@@ -522,7 +526,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                       {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
                         <div
                           key={d}
-                          className="flex-1 text-center text-[8px] font-medium text-gray-500"
+                          className="flex-1 text-center text-[8px] font-medium text-muted-foreground"
                         >
                           {d}
                         </div>
@@ -534,23 +538,23 @@ export function BonawitzDataSection({ currentStep }: Props) {
             })}
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-foreground">
                 Quantization for Secure Aggregation
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-gray-900 p-4 rounded-lg mb-4">
+              <div className="bg-muted p-4 rounded-lg mb-4">
                 <MathBlock>
                   {"\\tilde{x}_u = \\text{round}(x_u \\times Q) \\mod R"}
                 </MathBlock>
-                <p className="text-xs text-center mt-2 text-gray-400">
+                <p className="text-xs text-center mt-2 text-muted-foreground">
                   Float gradients are quantized to integers for secure modular
                   arithmetic
                 </p>
               </div>
-              <p className="text-sm text-center text-gray-300">
+              <p className="text-sm text-center text-foreground/80">
                 After local training, each client's gradient{" "}
                 <MathTex>{"x_u"}</MathTex> will be quantized and protected
                 during aggregation using the Bonawitz secure protocol.

@@ -287,11 +287,11 @@ export function SecureAggregationSection({
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="text-primary">🔒</span>
-                  Up to t-1 colluding clients cannot learn anything
+                  Up to <MathTex>{"t-1"}</MathTex> colluding clients cannot learn anything
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">🔒</span>
-                  The server and t-2 clients cannot break security
+                  The server and <MathTex>{"t-2"}</MathTex> clients cannot break security
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-primary">🔒</span>

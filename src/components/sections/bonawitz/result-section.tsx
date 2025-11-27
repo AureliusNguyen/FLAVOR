@@ -1,16 +1,23 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { StepContent } from '@/components/section-wrapper';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { useBonawitz } from '@/context/bonawitz-context';
-import { CheckCircle, Shield, Users, Lock, RotateCcw, ExternalLink } from 'lucide-react';
-import { Math as MathTex } from '@/components/math';
-import Link from 'next/link';
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { StepContent } from "@/components/section-wrapper";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { useBonawitz } from "@/context/bonawitz-context";
+import {
+  CheckCircle,
+  Shield,
+  Users,
+  Lock,
+  RotateCcw,
+  ExternalLink,
+} from "lucide-react";
+import { Math as MathTex } from "@/components/math";
+import Link from "next/link";
 
 interface Props {
   currentStep: number;
@@ -19,11 +26,23 @@ interface Props {
 export function BonawitzResultSection({ currentStep }: Props) {
   const { clients, config, protocolData, resetProtocol } = useBonawitz();
 
-  const aliveClients = clients.filter(c => !c.isDropped);
-  const droppedClients = clients.filter(c => c.isDropped);
+  // U₂ = clients who submitted masked inputs (alive + late dropouts)
+  const u2Clients = clients.filter(
+    (c) => c.dropoutPhase === "alive" || c.dropoutPhase === "after_masked_input"
+  );
+  // U₃ = clients still alive at Round 4
+  const u3Clients = clients.filter((c) => c.dropoutPhase === "alive");
+  // Early dropouts (U₁ \ U₂)
+  const earlyDropouts = clients.filter(
+    (c) => c.dropoutPhase === "after_share_keys"
+  );
+  // Late dropouts (U₂ \ U₃)
+  const lateDropouts = clients.filter(
+    (c) => c.dropoutPhase === "after_masked_input"
+  );
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-white">
+    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-foreground">
       {/* Step 0: Final Result */}
       <StepContent isActive={currentStep === 0} stepIndex={0}>
         <div className="space-y-6 pb-26">
@@ -35,8 +54,12 @@ export function BonawitzResultSection({ currentStep }: Props) {
             >
               <CheckCircle className="h-10 w-10 text-green-400" />
             </motion.div>
-            <h2 className="text-3xl font-bold mb-2">Secure Aggregation Complete!</h2>
-            <p className="text-gray-400">The protocol successfully computed the aggregate</p>
+            <h2 className="text-3xl font-bold mb-2">
+              Secure Aggregation Complete!
+            </h2>
+            <p className="text-muted-foreground">
+              The protocol successfully computed the aggregate
+            </p>
           </div>
 
           {/* Result Card */}
@@ -50,22 +73,52 @@ export function BonawitzResultSection({ currentStep }: Props) {
             <CardContent className="space-y-4">
               {protocolData.round4?.dequantizedAverage ? (
                 <>
-                  <div className="bg-gray-900 p-4 rounded-lg">
-                    <p className="text-sm text-gray-400 mb-2">Average Gradient Vector:</p>
+                  <div className="bg-muted p-4 rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Average Gradient Vector:
+                    </p>
                     <div className="font-mono text-xl text-center text-green-300">
-                      [{protocolData.round4.dequantizedAverage.map((v: number) => v.toFixed(6)).join(', ')}]
+                      [
+                      {protocolData.round4.dequantizedAverage
+                        .map((v: number) => v.toFixed(6))
+                        .join(", ")}
+                      ]
                     </div>
                   </div>
 
                   {protocolData.verification && (
-                    <Alert variant={protocolData.verification.passed ? 'default' : 'destructive'}>
+                    <Alert
+                      variant={
+                        protocolData.verification.passed
+                          ? "default"
+                          : "destructive"
+                      }
+                    >
                       <AlertDescription>
-                        <strong>{protocolData.verification.passed ? '✓ Verification Passed' : '✗ Verification Failed'}</strong>
-                        <p className="text-sm mt-1">{protocolData.verification.message}</p>
+                        <strong>
+                          {protocolData.verification.passed
+                            ? "✓ Verification Passed"
+                            : "✗ Verification Failed"}
+                        </strong>
+                        <p className="text-sm mt-1">
+                          {protocolData.verification.message}
+                        </p>
                         {protocolData.verification.passed && (
                           <div className="mt-2 text-xs font-mono">
-                            <div>Expected: [{protocolData.verification.expected?.map((v: number) => v.toFixed(6)).join(', ')}]</div>
-                            <div>Actual: [{protocolData.verification.actual?.map((v: number) => v.toFixed(6)).join(', ')}]</div>
+                            <div>
+                              Expected: [
+                              {protocolData.verification.expected
+                                ?.map((v: number) => v.toFixed(6))
+                                .join(", ")}
+                              ]
+                            </div>
+                            <div>
+                              Actual: [
+                              {protocolData.verification.actual
+                                ?.map((v: number) => v.toFixed(6))
+                                .join(", ")}
+                              ]
+                            </div>
                           </div>
                         )}
                       </AlertDescription>
@@ -73,43 +126,107 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   )}
 
                   {/* Rounding Error Explanation */}
-                  <div className="bg-gray-900 p-4 rounded-lg border border-blue-500/30 mt-4">
-                    <p className="font-semibold text-blue-300 mb-3">Why Small Differences Are Expected</p>
-                    <div className="text-sm text-gray-300 space-y-3">
+                  <div className="bg-muted p-4 rounded-lg border border-blue-500/30 mt-4">
+                    <p className="font-semibold text-blue-300 mb-3">
+                      Why Small Differences Are Expected
+                    </p>
+                    <div className="text-sm text-foreground/80 space-y-3">
                       <div>
-                        <p className="text-gray-400 mb-1">The protocol uses quantization to convert floats to integers:</p>
-                        <div className="bg-gray-800 p-2 rounded font-mono text-xs">
-                          <div className="text-yellow-300">x̃ = round(x × Q) mod R</div>
-                          <div className="text-gray-500 mt-1">where Q = {config.Q.toLocaleString()} (quantization factor)</div>
+                        <p className="text-muted-foreground mb-1">
+                          The protocol uses quantization to convert floats to
+                          integers:
+                        </p>
+                        <div className="bg-card p-2 rounded font-mono text-xs">
+                          <div className="text-yellow-300">
+                            <MathTex>
+                              {
+                                "\\tilde{x} = \\text{round}(x \\times Q) \\mod R"
+                              }
+                            </MathTex>
+                          </div>
+                          <div className="text-muted-foreground mt-1">
+                            <MathTex>{`\\text{where } Q = ${config.Q.toLocaleString()}`}</MathTex>{" "}
+                            (quantization factor)
+                          </div>
                         </div>
                       </div>
 
                       <div>
-                        <p className="text-gray-400 mb-1">Rounding introduces small errors at each step:</p>
+                        <p className="text-muted-foreground mb-1">
+                          Rounding introduces small errors at each step:
+                        </p>
                         <ol className="list-decimal list-inside text-xs space-y-1 ml-2">
-                          <li><span className="text-gray-400">Client quantizes:</span> <span className="text-blue-300">0.1234 × {config.Q} = {(0.1234 * config.Q).toFixed(1)} → round to {Math.round(0.1234 * config.Q)}</span></li>
-                          <li><span className="text-gray-400">After aggregation & dequantization:</span> <span className="text-green-300">{Math.round(0.1234 * config.Q)} ÷ {config.Q} = {(Math.round(0.1234 * config.Q) / config.Q).toFixed(6)}</span></li>
-                          <li><span className="text-gray-400">Max error per value:</span> <span className="text-yellow-300">±{(0.5 / config.Q).toFixed(6)}</span> (half a quantization step)</li>
+                          <li>
+                            <span className="text-muted-foreground">
+                              Client quantizes:
+                            </span>{" "}
+                            <span className="text-blue-300">
+                              <MathTex>
+                                {`0.1234 \\times ${config.Q.toLocaleString()} = ${(
+                                  0.1234 * config.Q
+                                ).toFixed(1)} \\approx ${Math.round(
+                                  0.1234 * config.Q
+                                )}`}
+                              </MathTex>
+                            </span>
+                          </li>
+
+                          <li>
+                            <span className="text-muted-foreground">
+                              After aggregation & dequantization:
+                            </span>{" "}
+                            <span className="text-green-300">
+                              <MathTex>
+                                {`\\frac{${Math.round(
+                                  0.1234 * config.Q
+                                )}}{${config.Q.toLocaleString()}} = ${(
+                                  Math.round(0.1234 * config.Q) / config.Q
+                                ).toFixed(6)}`}
+                              </MathTex>
+                            </span>
+                          </li>
+
+                          <li>
+                            <span className="text-muted-foreground">
+                              Max error per value:
+                            </span>{" "}
+                            <span className="text-yellow-300">
+                              <MathTex>
+                                {`\\pm ${(0.5 / config.Q).toFixed(6)}`}
+                              </MathTex>{" "}
+                              (half a quantization step)
+                            </span>
+                          </li>
                         </ol>
                       </div>
 
-                      <div className="border-t border-gray-700 pt-3">
-                        <p className="text-gray-400 mb-1">Acceptable Threshold:</p>
+                      <div className="border-t border-border pt-3">
+                        <p className="text-muted-foreground mb-1">
+                          Acceptable Threshold:
+                        </p>
                         <div className="flex items-center gap-2">
-                          <Badge className="bg-green-600 text-xs">ε = 0.01</Badge>
-                          <span className="text-xs text-gray-400">
-                            Differences &lt; 1% are considered correct (typical ML gradient precision)
+                          <Badge className="bg-green-600 text-xs">
+                            <MathTex>{"ε = 0.01"}</MathTex>
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">
+                            Differences <MathTex>{"< 1%"}</MathTex> are
+                            considered correct (typical ML gradient precision)
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">
-                          With Q = {config.Q.toLocaleString()}, max error ≈ {(0.5 / config.Q * 100).toFixed(4)}% per element — well within tolerance.
+                        <p className="text-xs text-muted-foreground mt-2">
+                          With <MathTex>{"Q = "}</MathTex>{" "}
+                          {config.Q.toLocaleString()}, max error{" "}
+                          <MathTex>{"≈"}</MathTex> <MathTex>{"≈"}</MathTex>{" "}
+                          {((0.5 / config.Q) * 100).toFixed(4)}
+                          <MathTex>{"%"}</MathTex> per element — well within
+                          tolerance.
                         </p>
                       </div>
                     </div>
                   </div>
                 </>
               ) : (
-                <div className="text-center text-gray-400">
+                <div className="text-center text-muted-foreground">
                   Result computation in progress...
                 </div>
               )}
@@ -117,34 +234,51 @@ export function BonawitzResultSection({ currentStep }: Props) {
           </Card>
 
           {/* Statistics */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <Card className="bg-gray-800 border-gray-700">
+          <div className="grid md:grid-cols-4 gap-4">
+            <Card className="bg-card border-border">
               <CardContent className="pt-6 text-center">
                 <Users className="h-8 w-8 text-blue-400 mx-auto mb-2" />
                 <p className="text-2xl font-bold">{config.N}</p>
-                <p className="text-sm text-gray-400">Total Clients</p>
+                <p className="text-sm text-muted-foreground">Total Clients</p>
               </CardContent>
             </Card>
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-card border-border">
+              <CardContent className="pt-6 text-center">
+                <CheckCircle className="h-8 w-8 text-cyan-400 mx-auto mb-2" />
+                <p className="text-2xl font-bold">{u2Clients.length}</p>
+                <p className="text-sm text-muted-foreground">
+                  <MathTex>{"U_2"}</MathTex> (Submitted)
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="bg-card border-border">
               <CardContent className="pt-6 text-center">
                 <CheckCircle className="h-8 w-8 text-green-400 mx-auto mb-2" />
-                <p className="text-2xl font-bold">{aliveClients.length}</p>
-                <p className="text-sm text-gray-400">Completed Protocol</p>
+                <p className="text-2xl font-bold">{u3Clients.length}</p>
+                <p className="text-sm text-muted-foreground">
+                  <MathTex>{"U_3"}</MathTex> (Stayed Alive)
+                </p>
               </CardContent>
             </Card>
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-card border-border">
               <CardContent className="pt-6 text-center">
                 <Lock className="h-8 w-8 text-purple-400 mx-auto mb-2" />
-                <p className="text-2xl font-bold">{droppedClients.length}</p>
-                <p className="text-sm text-gray-400">Dropouts Handled</p>
+                <p className="text-2xl font-bold">
+                  {earlyDropouts.length + lateDropouts.length}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Dropouts Handled
+                </p>
               </CardContent>
             </Card>
           </div>
 
           {/* Security Summary */}
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">Security Guarantees</CardTitle>
+              <CardTitle className="text-foreground">
+                Security Guarantees
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4">
@@ -152,15 +286,25 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">Input Privacy</p>
-                      <p className="text-xs text-gray-400">Server never saw individual gradients <MathTex>{"x_u"}</MathTex></p>
+                      <p className="font-semibold text-green-300">
+                        Input Privacy
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Server never saw individual gradients{" "}
+                        <MathTex>{"x_u"}</MathTex>
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">Pairwise Mask Cancellation</p>
-                      <p className="text-xs text-gray-400">All <MathTex>{"p_{uv}"}</MathTex> masks cancelled perfectly</p>
+                      <p className="font-semibold text-green-300">
+                        Pairwise Mask Cancellation
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        All <MathTex>{"p_{uv}"}</MathTex> masks cancelled
+                        perfectly
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -168,15 +312,27 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">Dropout Resilience</p>
-                      <p className="text-xs text-gray-400">Handled {droppedClients.length} dropouts via Shamir reconstruction</p>
+                      <p className="font-semibold text-green-300">
+                        Dropout Resilience
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Handled {earlyDropouts.length + lateDropouts.length}{" "}
+                        dropouts via Shamir reconstruction
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">Honest Majority</p>
-                      <p className="text-xs text-gray-400"><MathTex>{"T = "}</MathTex> {config.T} <MathTex>{"\\leq"}</MathTex> {aliveClients.length} threshold satisfied</p>
+                      <p className="font-semibold text-green-300">
+                        Honest Majority
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        <MathTex>{`T = ${config.T.toString()}`}</MathTex>{" "}
+                        <MathTex>{"\\leq"}</MathTex>{" "}
+                        <MathTex>{u3Clients.length.toString()}</MathTex>{" "}
+                        threshold satisfied
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -190,22 +346,44 @@ export function BonawitzResultSection({ currentStep }: Props) {
       <StepContent isActive={currentStep === 1} stepIndex={1}>
         <div className="space-y-6">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-2">Thank You for Exploring!</h2>
-            <p className="text-gray-400">You've completed the Bonawitz Secure Aggregation demonstration</p>
+            <h2 className="text-3xl font-bold mb-2">
+              Thank You for Exploring!
+            </h2>
+            <p className="text-muted-foreground">
+              You've completed the Bonawitz Secure Aggregation demonstration
+            </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">What You Learned</CardTitle>
+              <CardTitle className="text-foreground">
+                What You Learned
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {[
-                  { text: 'Pairwise masking using Diffie-Hellman key agreement', hasMath: false },
-                  { text: 'Self-mask secret sharing for dropout resilience', hasMath: false },
-                  { text: 'How masks cancel out to reveal only the aggregate', hasMath: false },
-                  { text: "Shamir Secret Sharing for reconstructing dropped clients' masks", hasMath: false },
-                  { text: 'The importance of the honest majority threshold', hasMath: true, mathPart: '(T > N/2)' },
+                  {
+                    text: "Pairwise masking using Diffie-Hellman key agreement",
+                    hasMath: false,
+                  },
+                  {
+                    text: "Self-mask secret sharing for dropout resilience",
+                    hasMath: false,
+                  },
+                  {
+                    text: "How masks cancel out to reveal only the aggregate",
+                    hasMath: false,
+                  },
+                  {
+                    text: "Shamir Secret Sharing for reconstructing dropped clients' masks",
+                    hasMath: false,
+                  },
+                  {
+                    text: "The importance of the honest majority threshold",
+                    hasMath: true,
+                    mathPart: "(T > N/2)",
+                  },
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -215,10 +393,13 @@ export function BonawitzResultSection({ currentStep }: Props) {
                     className="flex items-center gap-2"
                   >
                     <Badge className="bg-purple-600 text-xs">{idx + 1}</Badge>
-                    <span className="text-gray-300">
+                    <span className="text-foreground/80">
                       {item.text}
                       {item.hasMath && item.mathPart && (
-                        <> <MathTex>{item.mathPart}</MathTex></>
+                        <>
+                          {" "}
+                          <MathTex>{item.mathPart}</MathTex>
+                        </>
                       )}
                     </span>
                   </motion.div>
@@ -231,7 +412,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
             <Button
               onClick={resetProtocol}
               variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              className="border-border text-foreground/80 hover:bg-card"
             >
               <RotateCcw className="h-4 w-4 mr-2" />
               Try Different Configs
@@ -244,22 +425,21 @@ export function BonawitzResultSection({ currentStep }: Props) {
           </div>
 
           <Card className="bg-purple-900/30 border-purple-500">
-            <CardContent className="pt-6">
+            <CardContent className="flex flex-col items-center justify-center">
               <p className="text-center text-purple-200 mb-3">
                 <strong>Read the Original Paper:</strong>
               </p>
-              <div className="flex justify-center">
-                <a
-                  href="https://arxiv.org/abs/1611.04482"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-purple-300 hover:text-purple-100 transition-colors"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  Practical Secure Aggregation for Privacy-Preserving Machine Learning
-                  <Badge className="bg-purple-700">arXiv:1611.04482</Badge>
-                </a>
-              </div>
+              <a
+                href="https://arxiv.org/abs/1611.04482"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-purple-300 hover:text-purple-100 transition-colors"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Practical Secure Aggregation for Privacy-Preserving Machine
+                Learning
+                <Badge className="bg-purple-700">arXiv:1611.04482</Badge>
+              </a>
             </CardContent>
           </Card>
         </div>

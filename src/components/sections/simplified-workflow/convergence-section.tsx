@@ -89,7 +89,7 @@ export function ConvergenceSection({ currentStep }: ConvergenceSectionProps) {
                     initial={{ height: 0 }}
                     animate={{ height: isVisible ? `${height}%` : 0 }}
                     transition={{ duration: 0.3 }}
-                    className="flex-1 bg-primary rounded-t relative group cursor-pointer"
+                    className="flex-1 bg-green-500 rounded-t relative group"
                     onClick={() => setSelectedRound(idx)}
                   >
                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
@@ -144,7 +144,7 @@ export function ConvergenceSection({ currentStep }: ConvergenceSectionProps) {
                     initial={{ height: 0 }}
                     animate={{ height: `${height}%` }}
                     transition={{ duration: 0.3, delay: idx * 0.1 }}
-                    className="flex-1 bg-destructive/60 rounded-b relative group"
+                    className="flex-1 bg-red-500 rounded-b relative group"
                   >
                     <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity">
                       {round.globalLoss.toFixed(2)}

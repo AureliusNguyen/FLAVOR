@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, BookOpen, Zap, Shield, Users } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const workflows = [
   {
@@ -49,7 +50,12 @@ const workflows = [
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <main className="min-h-screen bg-background">
+      {/* Theme Toggle */}
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+
       {/* Header */}
       <div className="container mx-auto px-6 py-12">
         <motion.div
@@ -58,14 +64,14 @@ export default function HomePage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4">
             FLAVOR
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-2">
+          <p className="text-xl md:text-2xl text-foreground/80 mb-2">
           Federated Learning Analytics, Visualization, Optimization &
           Reliability
           </p>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
           FLAVOR is a tool for visualizing and understanding the privacy-preserving properties and optimization techniques used in federated learning.
           </p>
         </motion.div>
@@ -77,10 +83,10 @@ export default function HomePage() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="mb-12"
         >
-          <h2 className="text-3xl font-bold text-center text-white mb-3">
+          <h2 className="text-3xl font-bold text-center text-foreground mb-3">
             Choose Your Experience
           </h2>
-          <p className="text-center text-gray-400 mb-8">
+          <p className="text-center text-muted-foreground mb-8">
             Select a learning path based on your expertise and goals
           </p>
         </motion.div>
@@ -94,7 +100,7 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + index * 0.2, duration: 0.6 }}
             >
-              <Card className="h-full bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors duration-300 flex flex-col">
+              <Card className="h-full hover:border-primary/50 transition-colors duration-300 flex flex-col">
                 <CardHeader>
                   <div className="flex items-start justify-between mb-4">
                     <div
@@ -102,26 +108,23 @@ export default function HomePage() {
                     >
                       <workflow.icon className="w-8 h-8 text-white" />
                     </div>
-                    <Badge
-                      variant="outline"
-                      className="text-gray-300 border-gray-600"
-                    >
+                    <Badge variant="outline">
                       {workflow.complexity}
                     </Badge>
                   </div>
 
-                  <CardTitle className="text-2xl text-white mb-2">
+                  <CardTitle className="text-2xl mb-2">
                     {workflow.title}
                   </CardTitle>
-                  <p className="text-sm text-gray-400 mb-3">
+                  <p className="text-sm text-muted-foreground mb-3">
                     {workflow.subtitle}
                   </p>
 
                   {workflow.reference && workflow.referenceUrl && (
                     <div className="mb-3">
                       <a href={workflow.referenceUrl} target="_blank" rel="noopener noreferrer">
-                        <Badge className="bg-purple-900/50 text-purple-200 border-purple-700 hover:bg-purple-800/50 cursor-pointer transition-colors">
-                          📄 {workflow.reference}
+                        <Badge className="bg-purple-500/20 text-purple-600 dark:text-purple-300 border-purple-500/30 hover:bg-purple-500/30 cursor-pointer transition-colors">
+                          {workflow.reference}
                         </Badge>
                       </a>
                     </div>
@@ -129,36 +132,36 @@ export default function HomePage() {
                 </CardHeader>
 
                 <CardContent className="flex flex-col flex-1">
-                  <p className="text-gray-300 text-sm leading-relaxed">
+                  <p className="text-foreground/80 text-sm leading-relaxed">
                     {workflow.description}
                   </p>
 
                   <div className="space-y-2 mt-4">
-                    <p className="text-xs font-semibold text-gray-400 uppercase">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase">
                       Features:
                     </p>
                     <ul className="space-y-1.5">
                       {workflow.features.map((feature, idx) => (
                         <li
                           key={idx}
-                          className="text-sm text-gray-400 flex items-start"
+                          className="text-sm text-muted-foreground flex items-start"
                         >
-                          <span className="text-green-400 mr-2">✓</span>
+                          <span className="text-green-500 dark:text-green-400 mr-2">✓</span>
                           {feature}
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-700 mt-auto">
-                    <div className="flex items-center text-sm text-gray-400">
+                  <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
+                    <div className="flex items-center text-sm text-muted-foreground">
                       <Users className="w-4 h-4 mr-1" />
                       {workflow.duration}
                     </div>
                     <Link href={workflow.path}>
                       <Button
                         variant="outline"
-                        className="text-white font-semibold border-gray-500 hover:border-purple-400 hover:text-purple-400 bg-transparent hover:bg-transparent cursor-pointer group"
+                        className="font-semibold hover:border-primary hover:text-primary cursor-pointer group"
                       >
                         Start Learning
                         <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -178,28 +181,28 @@ export default function HomePage() {
           transition={{ delay: 1, duration: 0.6 }}
           className="mt-16 text-center"
         >
-          <Card className="bg-gray-800/50 border-gray-700 border-dashed max-w-2xl mx-auto">
+          <Card className="bg-muted/50 border-dashed max-w-2xl mx-auto">
             <CardContent className="py-8">
               <div className="flex items-center justify-center mb-4">
-                <Zap className="w-8 h-8 text-yellow-400 mr-2" />
-                <h3 className="text-xl font-bold text-white">
+                <Zap className="w-8 h-8 text-yellow-500 mr-2" />
+                <h3 className="text-xl font-bold text-foreground">
                   More Protocols Coming Soon
                 </h3>
               </div>
-              <p className="text-gray-400 mb-4">
+              <p className="text-muted-foreground mb-4">
                 Future implementations will include:
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                <Badge variant="outline" className="text-gray-400 border-gray-600">
+                <Badge variant="outline">
                   SecAgg+ (2020)
                 </Badge>
-                <Badge variant="outline" className="text-gray-400 border-gray-600">
+                <Badge variant="outline">
                   LightSecAgg (2022)
                 </Badge>
-                <Badge variant="outline" className="text-gray-400 border-gray-600">
+                <Badge variant="outline">
                   FastSecAgg (2023)
                 </Badge>
-                <Badge variant="outline" className="text-gray-400 border-gray-600">
+                <Badge variant="outline">
                   Custom Protocols
                 </Badge>
               </div>
@@ -212,7 +215,7 @@ export default function HomePage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.6 }}
-          className="mt-16 text-center text-gray-500 text-sm space-y-2"
+          className="mt-16 text-center text-muted-foreground text-sm space-y-2"
         >
           <p>
             Built for education and research • Interactive FL protocol demonstrations
@@ -223,7 +226,7 @@ export default function HomePage() {
               href="https://www.linkedin.com/in/aurelius-nguyen/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-foreground/70 hover:text-foreground transition-colors"
             >
               Aurelius Nguyen
             </a>{" "}

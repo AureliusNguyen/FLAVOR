@@ -15,6 +15,7 @@ import { BonawitzTrainingSection } from '@/components/sections/bonawitz/training
 import { BonawitzAdvertiseKeysSection } from '@/components/sections/bonawitz/advertise-keys-section';
 import { BonawitzShareKeysSection } from '@/components/sections/bonawitz/share-keys-section';
 import { BonawitzMaskedInputSection } from '@/components/sections/bonawitz/masked-input-section';
+import { BonawitzConsistencyCheckSection } from '@/components/sections/bonawitz/consistency-check-section';
 import { BonawitzUnmaskingSection } from '@/components/sections/bonawitz/unmasking-section';
 import { BonawitzResultSection } from '@/components/sections/bonawitz/result-section';
 
@@ -26,6 +27,7 @@ const sections = [
   { id: 'advertise', title: 'Round 0', steps: 4, component: BonawitzAdvertiseKeysSection },
   { id: 'share-keys', title: 'Round 1', steps: 3, component: BonawitzShareKeysSection },
   { id: 'masked-input', title: 'Round 2', steps: 3, component: BonawitzMaskedInputSection },
+  { id: 'consistency-check', title: 'Round 3', steps: 3, component: BonawitzConsistencyCheckSection },
   { id: 'unmasking', title: 'Round 4', steps: 3, component: BonawitzUnmaskingSection },
   { id: 'result', title: 'Result', steps: 2, component: BonawitzResultSection },
 ];
@@ -54,7 +56,7 @@ function BonawitzProtocolContent() {
   const globalProgress = (navigation.getCurrentGlobalStep() / (navigation.getTotalSteps() - 1)) * 100;
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+    <main className="min-h-screen bg-background relative overflow-hidden">
       <NavigationControls
         currentSection={navigation.currentSection}
         currentStep={navigation.currentStep}

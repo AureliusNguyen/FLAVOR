@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useBonawitz } from "@/context/bonawitz-context";
 import { MathBlock, Math as MathTex } from "@/components/math";
-import { Unlock, Share2, CheckCircle, Loader2 } from "lucide-react";
+import { Unlock, Share2, CheckCircle, Loader2, WifiOff, Key } from "lucide-react";
 
 interface Props {
   currentStep: number;
@@ -24,46 +24,83 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
     }
   }, [currentStep, setCurrentProtocolRound]);
 
-  const aliveClients = clients.filter((c) => !c.isDropped);
-  const droppedClients = clients.filter((c) => c.isDropped);
+  // U₃ = clients who are alive and will participate in Round 4
+  const u3Clients = clients.filter((c) => c.dropoutPhase === "alive");
+
+  // U₂ = clients who submitted masked inputs
+  const u2Clients = clients.filter(
+    (c) => c.dropoutPhase === "alive" || c.dropoutPhase === "after_masked_input"
+  );
+
+  // U₁ \ U₂ = Early dropouts (didn't submit masked input)
+  const earlyDropouts = clients.filter((c) => c.dropoutPhase === "after_share_keys");
+
+  // U₂ \ U₃ = Late dropouts (submitted but then disconnected)
+  const lateDropouts = clients.filter((c) => c.dropoutPhase === "after_masked_input");
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-white">
+    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-foreground pb-26">
       {/* Step 0: Unmasking Overview */}
       <StepContent isActive={currentStep === 0} stepIndex={0}>
         <div className="space-y-6">
           <div className="text-center">
             <Badge className="mb-4 bg-purple-600">Round 4</Badge>
             <h2 className="text-3xl font-bold mb-2">Unmasking</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Remove self-masks and recover true aggregate
             </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Unlock className="h-5 w-5 text-green-400" />
                 Unmasking Process
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-3 gap-4">
                 <Card className="bg-green-900/30 border-green-500">
                   <CardContent className="pt-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="h-5 w-5 text-green-400" />
                       <p className="font-semibold text-green-300">
-                        Alive Clients ({aliveClients.length})
+                        Alive (<MathTex>{"U_3"}</MathTex>): {u3Clients.length}
                       </p>
                     </div>
-                    <p className="text-xs text-gray-300">
+                    <p className="text-xs text-foreground/80">
                       Reveal their self-mask <MathTex>{"b_u"}</MathTex> directly
                       to the server
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1">
-                      {aliveClients.map((c) => (
+                      {u3Clients.map((c) => (
                         <Badge key={c.id} style={{ backgroundColor: c.color }}>
+                          {c.id}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-orange-900/30 border-orange-500">
+                  <CardContent className="pt-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Key className="h-5 w-5 text-orange-400" />
+                      <p className="font-semibold text-orange-300">
+                        Early (<MathTex>{"U_1 \\setminus U_2"}</MathTex>): {earlyDropouts.length}
+                      </p>
+                    </div>
+                    <p className="text-xs text-foreground/80">
+                      Reconstruct private key <MathTex>{"a_u"}</MathTex> to compute
+                      pairwise masks. No self-mask needed.
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {earlyDropouts.map((c) => (
+                        <Badge
+                          key={c.id}
+                          variant="outline"
+                          className="border-orange-500 text-orange-300"
+                        >
                           {c.id}
                         </Badge>
                       ))}
@@ -76,15 +113,15 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                     <div className="flex items-center gap-2 mb-2">
                       <Share2 className="h-5 w-5 text-red-400" />
                       <p className="font-semibold text-red-300">
-                        Dropped Clients ({droppedClients.length})
+                        Late (<MathTex>{"U_2 \\setminus U_3"}</MathTex>): {lateDropouts.length}
                       </p>
                     </div>
-                    <p className="text-xs text-gray-300">
-                      Server reconstructs <MathTex>{"b_u"}</MathTex> using
+                    <p className="text-xs text-foreground/80">
+                      Reconstruct self-mask <MathTex>{"b_u"}</MathTex> using
                       Shamir shares from alive clients
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1">
-                      {droppedClients.map((c) => (
+                      {lateDropouts.map((c) => (
                         <Badge
                           key={c.id}
                           variant="outline"
@@ -98,16 +135,29 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                 </Card>
               </div>
 
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-muted p-4 rounded-lg space-y-3">
                 <MathBlock>
                   {
-                    "\\sum x_u = \\sum y_u - \\sum_{u \\in U_3} b_u - \\sum_{u \\in U_2 \\setminus U_3} \\text{Reconstruct}(b_u)"
+                    "\\sum_{u \\in U_2} x_u = \\sum_{u \\in U_2} y_u - \\sum_{u \\in U_3} b_u - \\sum_{u \\in U_2 \\setminus U_3} \\text{Reconstruct}(b_u)"
                   }
                 </MathBlock>
-                <p className="text-xs text-center mt-2 text-gray-400">
-                  <MathTex>{"U_3"}</MathTex> = alive clients in Round 4,{" "}
-                  <MathTex>{"U_2"}</MathTex> = clients who submitted in Round 2
+                <p className="text-xs text-center text-muted-foreground">
+                  <MathTex>{"U_2"}</MathTex> = clients who submitted masked inputs,{" "}
+                  <MathTex>{"U_3"}</MathTex> = clients alive in Round 4
                 </p>
+                <div className="border-t border-border pt-3">
+                  <p className="text-xs text-muted-foreground mb-2">
+                    <strong>Why only self-masks?</strong> Pairwise masks <MathTex>{"p_{uv}"}</MathTex> cancel automatically among clients who submitted:
+                  </p>
+                  <MathBlock>
+                    {
+                      "\\sum_{u \\in U_2} \\left( \\sum_{v > u} p_{uv} - \\sum_{v < u} p_{vu} \\right) = 0"
+                    }
+                  </MathBlock>
+                  <p className="text-xs text-center text-muted-foreground mt-2">
+                    Client <MathTex>{"u"}</MathTex> adds <MathTex>{"+p_{uv}"}</MathTex>, client <MathTex>{"v"}</MathTex> subtracts <MathTex>{"-p_{uv}"}</MathTex> → net contribution is 0
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -119,80 +169,152 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
         <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Collecting Shares</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Alive clients provide shares for dropped clients
             </p>
           </div>
 
-          {droppedClients.length > 0 ? (
-            <Card className="bg-gray-800 border-gray-700">
+          {(earlyDropouts.length > 0 || lateDropouts.length > 0) ? (
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white">
+                <CardTitle className="text-foreground">
                   Shamir Secret Sharing Reconstruction
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <Alert className="bg-blue-900/30 border-blue-500">
                   <AlertDescription className="text-blue-200">
-                    Each alive client holds a share of each dropped client's
-                    self-mask <MathTex>{"b_u"}</MathTex>. With{" "}
-                    <MathTex>{"T = "}</MathTex> {config.T} shares, we can
-                    reconstruct the secret.
+                    Each alive client holds shares of dropped clients' secrets.
+                    With <MathTex>{`T = ${config.T.toString()}`}</MathTex> shares, we can reconstruct using Lagrange interpolation.
                   </AlertDescription>
                 </Alert>
 
-                {droppedClients.map((dropped, idx) => (
-                  <motion.div
-                    key={dropped.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.2 }}
-                  >
-                    <Card
-                      className="border-2 border-red-500/50"
-                      style={{ backgroundColor: "rgba(31, 41, 55, 0.8)" }}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold opacity-50"
-                            style={{ backgroundColor: dropped.color }}
-                          >
-                            {dropped.id}
-                          </div>
-                          <span className="font-medium text-red-300">
-                            {dropped.name} (Dropped)
-                          </span>
-                        </div>
-                        <div className="text-sm text-gray-400 mb-2">
-                          Collecting shares from alive clients:
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {aliveClients
-                            .slice(0, config.T)
-                            .map((alive, shareIdx) => (
-                              <motion.div
-                                key={alive.id}
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{
-                                  delay: idx * 0.2 + shareIdx * 0.1,
-                                }}
+                {/* Early Dropouts - need private key reconstruction */}
+                {earlyDropouts.length > 0 && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Key className="h-5 w-5 text-orange-400" />
+                      <h4 className="font-semibold text-orange-300">
+                        Early Dropouts <MathTex>{"(U_1 \\setminus U_2)"}</MathTex> — reconstruct private key
+                      </h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      These clients dropped before submitting. Their private key <MathTex>{"a_u"}</MathTex> is
+                      reconstructed to compute pairwise masks with <MathTex>{"U_2"}</MathTex> clients.
+                    </p>
+                    {earlyDropouts.map((dropped, idx) => (
+                      <motion.div
+                        key={dropped.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.2 }}
+                      >
+                        <Card className="border-2 border-orange-500/50 bg-card/80">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <div
+                                className="w-8 h-8 rounded-full flex items-center justify-center text-foreground text-sm font-bold opacity-50"
+                                style={{ backgroundColor: dropped.color }}
                               >
-                                <Badge style={{ backgroundColor: alive.color }}>
-                                  Share from C{alive.id}
-                                </Badge>
-                              </motion.div>
-                            ))}
-                        </div>
-                        <div className="mt-2 text-xs text-green-400">
-                          ✓ {Math.min(aliveClients.length, config.T)}/{config.T}{" "}
-                          shares collected - reconstruction possible!
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                                {dropped.id}
+                              </div>
+                              <span className="font-medium text-orange-300">
+                                {dropped.name} (Early Dropout)
+                              </span>
+                              <Badge variant="outline" className="border-orange-500 text-orange-300 text-xs">
+                                <WifiOff className="h-3 w-3 mr-1" />
+                                <MathTex>{"U_1 \\setminus U_2"}</MathTex>
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-muted-foreground mb-2">
+                              Reconstructing private key <MathTex>{"a_u"}</MathTex> from shares:
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {u3Clients.slice(0, config.T).map((alive, shareIdx) => (
+                                <motion.div
+                                  key={alive.id}
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  transition={{ delay: idx * 0.2 + shareIdx * 0.1 }}
+                                >
+                                  <Badge style={{ backgroundColor: alive.color }}>
+                                    Share from C{alive.id}
+                                  </Badge>
+                                </motion.div>
+                              ))}
+                            </div>
+                            <div className="mt-2 text-xs text-green-400">
+                              ✓ {Math.min(u3Clients.length, config.T)}/{config.T} shares collected
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Late Dropouts - need self-mask reconstruction */}
+                {lateDropouts.length > 0 && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Share2 className="h-5 w-5 text-red-400" />
+                      <h4 className="font-semibold text-red-300">
+                        Late Dropouts <MathTex>{"(U_2 \\setminus U_3)"}</MathTex> — reconstruct self-mask
+                      </h4>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      These clients submitted masked inputs but then dropped.
+                      Their self-mask <MathTex>{"b_u"}</MathTex> is reconstructed to unmask their contribution.
+                    </p>
+                    {lateDropouts.map((dropped, idx) => (
+                      <motion.div
+                        key={dropped.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: (earlyDropouts.length + idx) * 0.2 }}
+                      >
+                        <Card className="border-2 border-red-500/50 bg-card/80">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <div
+                                className="w-8 h-8 rounded-full flex items-center justify-center text-foreground text-sm font-bold opacity-50"
+                                style={{ backgroundColor: dropped.color }}
+                              >
+                                {dropped.id}
+                              </div>
+                              <span className="font-medium text-red-300">
+                                {dropped.name} (Late Dropout)
+                              </span>
+                              <Badge variant="outline" className="border-red-500 text-red-300 text-xs">
+                                <MathTex>{"U_2 \\setminus U_3"}</MathTex>
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-muted-foreground mb-2">
+                              Reconstructing self-mask <MathTex>{"b_u"}</MathTex> from shares:
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {u3Clients.slice(0, config.T).map((alive, shareIdx) => (
+                                <motion.div
+                                  key={alive.id}
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  transition={{ delay: (earlyDropouts.length + idx) * 0.2 + shareIdx * 0.1 }}
+                                >
+                                  <Badge style={{ backgroundColor: alive.color }}>
+                                    Share from C{alive.id}
+                                  </Badge>
+                                </motion.div>
+                              ))}
+                            </div>
+                            <div className="mt-2 text-xs text-green-400">
+                              ✓ {Math.min(u3Clients.length, config.T)}/{config.T} shares collected
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
           ) : (
@@ -203,7 +325,7 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                   <p className="text-lg font-semibold text-green-300">
                     No Dropouts!
                   </p>
-                  <p className="text-gray-400">
+                  <p className="text-muted-foreground">
                     All clients remained online. No secret reconstruction
                     needed. Each client simply reveals their self-mask <MathTex>{"b_u"}</MathTex>.
                   </p>
@@ -219,14 +341,14 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
         <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Removing All Masks</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Step-by-step computation of the final unmasked aggregate
             </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-foreground">
                 Unmasking Computation (mod {config.R.toLocaleString()})
               </CardTitle>
             </CardHeader>
@@ -236,13 +358,13 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0 }}
-                className="bg-gray-900 p-4 rounded-lg border-l-4 border-cyan-500"
+                className="bg-muted p-4 rounded-lg border-l-4 border-cyan-500"
               >
                 <div className="text-sm font-semibold text-cyan-300 mb-2">
                   Step 1: Masked Sum from Server
                 </div>
                 <div className="font-mono text-sm">
-                  <span className="text-gray-400">
+                  <span className="text-muted-foreground">
                     <MathTex>{"\\sum_{u \\in U_2} y_u"}</MathTex> ={" "}
                   </span>
                   <span className="text-cyan-300">
@@ -252,9 +374,8 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                     ]
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  This includes: <MathTex>{"\\sum x_u + \\sum b_u"}</MathTex>{" "}
-                  (pairwise masks already cancelled)
+                <p className="text-xs text-muted-foreground mt-1">
+                  Expanded: <MathTex>{"\\sum_{u \\in U_2} y_u = \\sum_{u \\in U_2} x_u + \\underbrace{\\sum_{u \\in U_2} \\left(\\sum_{v>u} p_{uv} - \\sum_{v<u} p_{vu}\\right)}_{=0 \\text{ (cancels)}} + \\sum_{u \\in U_2} b_u"}</MathTex>
                 </p>
               </motion.div>
 
@@ -263,13 +384,13 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-gray-900 p-4 rounded-lg border-l-4 border-green-500"
+                className="bg-muted p-4 rounded-lg border-l-4 border-green-500"
               >
                 <div className="text-sm font-semibold text-green-300 mb-2">
-                  Step 2: Subtract Alive Clients' Self-Masks (revealed directly)
+                  Step 2: Subtract Alive Clients' Self-Masks (<MathTex>{"U_3"}</MathTex> — revealed directly)
                 </div>
                 <div className="space-y-2">
-                  {aliveClients.map((c, idx) => {
+                  {u3Clients.map((c, idx) => {
                     const selfMask = protocolData.round2?.selfMasks?.get(c.id);
                     return (
                       <motion.div
@@ -285,7 +406,7 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                         >
                           {c.name}
                         </Badge>
-                        <span className="text-gray-400">
+                        <span className="text-muted-foreground">
                           <MathTex>{`b_{${c.id}}`}</MathTex> =
                         </span>
                         <span className="text-green-300">
@@ -297,20 +418,62 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                 </div>
               </motion.div>
 
-              {/* Step 3: Reconstructed masks for dropped clients */}
-              {droppedClients.length > 0 && (
+              {/* Step 3: Early dropouts - pairwise key reconstruction */}
+              {earlyDropouts.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="bg-gray-900 p-4 rounded-lg border-l-4 border-red-500"
+                  className="bg-muted p-4 rounded-lg border-l-4 border-orange-500"
+                >
+                  <div className="text-sm font-semibold text-orange-300 mb-2">
+                    Step 3a: Handle Early Dropouts <MathTex>{"(U_1 \\setminus U_2)"}</MathTex> — reconstruct pairwise masks
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    These clients didn't submit, so pairwise masks with them <strong>don't cancel</strong>.
+                    We reconstruct their private key <MathTex>{"a_u"}</MathTex> to compute and remove these masks.
+                  </p>
+                  <div className="space-y-2">
+                    {earlyDropouts.map((c, idx) => (
+                      <motion.div
+                        key={c.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 + idx * 0.1 }}
+                        className="flex items-center gap-2 text-sm font-mono"
+                      >
+                        <Badge
+                          variant="outline"
+                          className="border-orange-500 text-orange-300 text-xs"
+                        >
+                          {c.name} (early)
+                        </Badge>
+                        <span className="text-muted-foreground">
+                          <MathTex>{`\\text{Reconstruct}(a_{${c.id}})`}</MathTex> → compute <MathTex>{`p_{${c.id},v}`}</MathTex>
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Late dropouts - self-mask reconstruction */}
+              {lateDropouts.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="bg-muted p-4 rounded-lg border-l-4 border-red-500"
                 >
                   <div className="text-sm font-semibold text-red-300 mb-2">
-                    Step 3: Subtract Reconstructed Dropped Clients' Masks (via
-                    Shamir SSS)
+                    Step 3b: Handle Late Dropouts <MathTex>{"(U_2 \\setminus U_3)"}</MathTex> — reconstruct self-masks
                   </div>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    These clients submitted masked inputs, so their pairwise masks cancelled.
+                    We only need to reconstruct their self-mask <MathTex>{"b_u"}</MathTex>.
+                  </p>
                   <div className="space-y-2">
-                    {droppedClients.map((c, idx) => {
+                    {lateDropouts.map((c, idx) => {
                       const reconstructed =
                         protocolData.round4?.reconstructedSelfMasks?.get(c.id);
                       return (
@@ -318,16 +481,16 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                           key={c.id}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.5 + idx * 0.1 }}
+                          transition={{ delay: 0.6 + idx * 0.1 }}
                           className="flex items-center gap-2 text-sm font-mono"
                         >
                           <Badge
                             variant="outline"
                             className="border-red-500 text-red-300 text-xs"
                           >
-                            {c.name} (dropped)
+                            {c.name} (late)
                           </Badge>
-                          <span className="text-gray-400">
+                          <span className="text-muted-foreground">
                             <MathTex>{`\\text{Reconstruct}(b_{${c.id}})`}</MathTex>{" "}
                             =
                           </span>
@@ -338,10 +501,6 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                       );
                     })}
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Reconstructed using T={config.T} shares from alive clients
-                    via Lagrange interpolation
-                  </p>
                 </motion.div>
               )}
 
@@ -365,8 +524,8 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                           <MathTex>{"\\sum x_u"}</MathTex> = [
                           {protocolData.round4.recoveredSum.join(", ")}]
                         </div>
-                        <div className="bg-gray-900 p-3 rounded-lg">
-                          <div className="text-sm text-gray-400 mb-2">
+                        <div className="bg-muted p-3 rounded-lg">
+                          <div className="text-sm text-muted-foreground mb-2">
                             Dequantized Average:
                           </div>
                           <div className="font-mono text-center text-blue-300">
@@ -376,13 +535,12 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
                               .join(", ") || "..."}
                             ]
                           </div>
-                          <p className="text-xs text-gray-500 mt-2 text-center">
+                          <p className="text-xs text-muted-foreground mt-2 text-center">
                             Formula:{" "}
                             <MathTex>
-                              {"\\bar{x} = \\frac{\\sum x_u}{N \\cdot Q}"}
+                              {"\\bar{x} = \\frac{\\sum x_u}{|U_2| \\cdot Q}"}
                             </MathTex>{" "}
-                            where N={aliveClients.length}, Q=
-                            {config.Q.toLocaleString()}
+                            <MathTex>{`\\text{where } |U_2| = ${u2Clients.length.toString()}, Q = ${config.Q.toLocaleString()}`}</MathTex>
                           </p>
                         </div>
                       </>
@@ -401,13 +559,15 @@ export function BonawitzUnmaskingSection({ currentStep }: Props) {
           <Alert className="bg-purple-900/30 border-purple-500">
             <AlertDescription className="text-purple-200">
               <strong>Privacy Preserved:</strong> The server now has the true
-              aggregate sum, but never learned any individual client's gradient
+              aggregate sum of {u2Clients.length} clients' gradients, but never learned any individual client's gradient
               vector <MathTex>{"x_u"}</MathTex>!
-              {droppedClients.length > 0 && (
+              {(earlyDropouts.length > 0 || lateDropouts.length > 0) && (
                 <span className="block mt-2">
                   <strong>Dropout Resilience:</strong> Successfully handled{" "}
-                  {droppedClients.length} client dropout(s) using Shamir Secret
-                  Sharing with threshold T={config.T}.
+                  {earlyDropouts.length > 0 && <>{earlyDropouts.length} early dropout(s) (pairwise key reconstruction)</>}
+                  {earlyDropouts.length > 0 && lateDropouts.length > 0 && " and "}
+                  {lateDropouts.length > 0 && <>{lateDropouts.length} late dropout(s) (self-mask reconstruction)</>}
+                  {" "}using Shamir Secret Sharing with threshold <MathTex>{`T = ${config.T.toString()}`}</MathTex>.
                 </span>
               )}
             </AlertDescription>

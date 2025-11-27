@@ -4,16 +4,19 @@ import { motion } from "framer-motion";
 import { StepContent } from "@/components/section-wrapper";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { defaultTrainingRounds, defaultClients } from "@/lib/data/mnist";
+import { defaultTrainingRounds } from "@/lib/data/mnist";
 import {
   CheckCircle,
   Shield,
   Network,
   Brain,
-  ExternalLink,
+  ArrowRight,
+  Zap,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVisualization } from "@/context/visualization-context";
+import Link from "next/link";
 
 interface SummarySectionProps {
   currentStep: number;
@@ -221,56 +224,137 @@ export function SummarySection({ currentStep }: SummarySectionProps) {
         </div>
       </StepContent>
 
-      {/* Step 3: What's next */}
+      {/* Step 3: Explore More */}
       <StepContent isActive={currentStep === 3} stepIndex={3}>
         <div className="space-y-8 max-w-4xl mx-auto">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">What's Next?</h2>
+            <h2 className="text-3xl font-bold mb-4">Explore More</h2>
             <p className="text-muted-foreground">
-              Future enhancements for FLAVOR
+              Continue your journey with advanced protocols and future features
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              "Interactive parameter configuration",
-              "Custom dataset upload",
-              "Differential privacy integration",
-              "Attack simulations + defenses",
-              "Performance benchmarking",
-              "Export / share configurations",
-              "Secure Aggregation variants (Bonawitz / MPC masking)",
-              "Client dropout & straggler simulator (availability %, latency)",
-            ].map((item, idx) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.05 }}
-              >
-                <Card className="p-3">
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className="h-5 w-5 p-0 flex items-center justify-center text-xs"
-                    >
-                      {idx + 1}
-                    </Badge>
-                    <span className="text-sm">{item}</span>
+          {/* Bonawitz Protocol Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Card className="p-6 border-purple-500/50 bg-purple-500/5">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg mb-2">
+                    Bonawitz Protocol (2017)
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Ready for real-world secure aggregation? Explore the full Bonawitz et al.
+                    protocol with pairwise Diffie-Hellman key exchange, double masking for
+                    dropout resilience, and multi-round communication.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <Badge variant="outline" className="text-xs">Pairwise Masking</Badge>
+                    <Badge variant="outline" className="text-xs">Dropout Handling</Badge>
+                    <Badge variant="outline" className="text-xs">Key Exchange</Badge>
+                    <Badge variant="outline" className="text-xs">Production Ready</Badge>
                   </div>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+                  <Link href="/bonawitz-protocol">
+                    <Button className="group">
+                      Explore Bonawitz Protocol
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Coming Soon Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="p-6 border-dashed">
+              <div className="flex items-center gap-2 mb-4">
+                <Zap className="h-5 w-5 text-yellow-500" />
+                <h3 className="font-semibold">Coming Soon</h3>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* Attack Simulations */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-red-400" />
+                    <span className="text-sm font-medium">Attack Simulations</span>
+                  </div>
+                  <ul className="text-xs text-muted-foreground space-y-1 ml-6">
+                    <li>• Gradient Inversion Attacks</li>
+                    <li>• Membership Inference</li>
+                    <li>• Model Poisoning</li>
+                    <li>• Byzantine Attacks</li>
+                  </ul>
+                </div>
+
+                {/* Advanced Protocols */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-blue-400" />
+                    <span className="text-sm font-medium">Advanced Protocols</span>
+                  </div>
+                  <ul className="text-xs text-muted-foreground space-y-1 ml-6">
+                    <li>• SecAgg+ (2020)</li>
+                    <li>• LightSecAgg (2022)</li>
+                    <li>• Differential Privacy Integration</li>
+                    <li>• Homomorphic Encryption</li>
+                  </ul>
+                </div>
+
+                {/* Robustness Features */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Network className="h-4 w-4 text-green-400" />
+                    <span className="text-sm font-medium">Robustness Features</span>
+                  </div>
+                  <ul className="text-xs text-muted-foreground space-y-1 ml-6">
+                    <li>• Client Dropout Simulator</li>
+                    <li>• Network Latency Effects</li>
+                    <li>• Straggler Mitigation</li>
+                    <li>• Async Aggregation</li>
+                  </ul>
+                </div>
+
+                {/* Tools & Customization */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Brain className="h-4 w-4 text-purple-400" />
+                    <span className="text-sm font-medium">Tools & Customization</span>
+                  </div>
+                  <ul className="text-xs text-muted-foreground space-y-1 ml-6">
+                    <li>• Custom Dataset Upload</li>
+                    <li>• Parameter Configuration</li>
+                    <li>• Performance Benchmarking</li>
+                    <li>• Export & Share</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
 
           <div className="text-center space-y-4">
             <p className="text-sm text-muted-foreground">
               Thank you for exploring FLAVOR!
             </p>
-            <div className="flex justify-center">
-              <Button size="sm" onClick={handleStartOver}>
+            <div className="flex justify-center gap-3">
+              <Button variant="outline" size="sm" onClick={handleStartOver}>
                 Start Over
               </Button>
+              <Link href="/">
+                <Button variant="outline" size="sm">
+                  Back to Home
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

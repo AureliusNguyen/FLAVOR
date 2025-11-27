@@ -68,7 +68,7 @@ export function FedAvgSection({ currentStep }: FedAvgSectionProps) {
               <div className="bg-muted p-4 rounded-lg">
                 <MathBlock>{"w_{\\text{global}} = \\sum_{k=1}^{K} \\frac{n_k}{n} \\cdot w_k"}</MathBlock>
                 <p className="text-xs text-muted-foreground mt-2 text-center">
-                  where <MathTex>{"n_k"}</MathTex> = samples at client k, <MathTex>{"n"}</MathTex> = total samples
+                  where <MathTex>{"n_k"}</MathTex> = samples at client <MathTex>{"k"}</MathTex>, <MathTex>{"n"}</MathTex> = total samples
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">

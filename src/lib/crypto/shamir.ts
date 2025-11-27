@@ -8,13 +8,23 @@ const DEFAULT_PRIME = BigInt('11579208923731619542357098500868790785326998466564
 
 export class ShamirSecretSharing {
   private config: ShamirConfig;
+  private useSeededRandom: boolean;
+  private seed: number;
 
-  constructor(threshold: number = 7, totalShares: number = 10, prime?: bigint) {
+  constructor(threshold: number = 7, totalShares: number = 10, prime?: bigint, useSeededRandom: boolean = false, seed: number = 42) {
     this.config = {
       threshold,
       totalShares,
       prime: prime || DEFAULT_PRIME
     };
+    this.useSeededRandom = useSeededRandom;
+    this.seed = seed;
+  }
+
+  // Seeded random for consistent demo values
+  private seededRandom(index: number): number {
+    const x = Math.sin(this.seed * 9999 + index * 7777) * 10000;
+    return Math.abs(x - Math.floor(x));
   }
 
   // Modular arithmetic helpers
@@ -45,19 +55,28 @@ export class ShamirSecretSharing {
     const coefficients: bigint[] = [secret];
 
     for (let i = 1; i <= degree; i++) {
-      // Generate random coefficient (simplified for demo - use crypto.getRandomValues in production)
-      const randomBytes = new Uint8Array(32);
-      if (typeof window !== 'undefined' && window.crypto) {
-        window.crypto.getRandomValues(randomBytes);
+      let coeff: bigint;
+
+      if (this.useSeededRandom) {
+        // Use seeded random for consistent demo values
+        const rand = this.seededRandom(i);
+        // Generate a large but reproducible coefficient
+        coeff = BigInt(Math.floor(rand * Number.MAX_SAFE_INTEGER));
       } else {
-        // Fallback for SSR
-        for (let j = 0; j < 32; j++) {
-          randomBytes[j] = Math.floor(Math.random() * 256);
+        // Generate random coefficient (use crypto.getRandomValues in production)
+        const randomBytes = new Uint8Array(32);
+        if (typeof window !== 'undefined' && window.crypto) {
+          window.crypto.getRandomValues(randomBytes);
+        } else {
+          // Fallback for SSR
+          for (let j = 0; j < 32; j++) {
+            randomBytes[j] = Math.floor(Math.random() * 256);
+          }
         }
-      }
-      let coeff = BigInt(0);
-      for (let j = 0; j < randomBytes.length; j++) {
-        coeff = (coeff << BigInt(8)) + BigInt(randomBytes[j]);
+        coeff = BigInt(0);
+        for (let j = 0; j < randomBytes.length; j++) {
+          coeff = (coeff << BigInt(8)) + BigInt(randomBytes[j]);
+        }
       }
       coefficients.push(this.mod(coeff, this.config.prime));
     }

@@ -580,27 +580,47 @@ export function getDropoutRecoveryDetails(
 
 /**
  * Verify protocol correctness by comparing with direct computation
+ *
+ * Important: The protocol computes the sum of clients in U₂ (those who submitted masked inputs),
+ * which includes both:
+ * - Alive clients (U₃)
+ * - Late dropouts (U₂ \ U₃) - clients who submitted but then dropped
+ *
+ * Early dropouts (U₁ \ U₂) are NOT included in the sum since they never submitted.
  */
 export function verifyProtocolCorrectness(
   clients: BonawitzClient[],
   round4Data: Round4Data,
   config: ProtocolConfig
 ): VerificationResult {
-  // Compute true average directly
-  const aliveInputs = clients
-    .filter((c) => round4Data.aliveClients.includes(c.id))
-    .map((c) => c.inputVector);
+  // U₂ = clients who submitted masked inputs (alive + late dropouts)
+  // This is exactly what the protocol aggregates
+  const u2Clients = clients.filter(
+    (c) => c.dropoutPhase === 'alive' || c.dropoutPhase === 'after_masked_input'
+  );
 
-  const k = aliveInputs[0].length;
+  if (u2Clients.length === 0) {
+    return {
+      passed: false,
+      message: 'No clients submitted masked inputs',
+      expected: [],
+      actual: [],
+      details: ['No U₂ clients to verify'],
+    };
+  }
+
+  // Compute true average directly from U₂ clients
+  const u2Inputs = u2Clients.map((c) => c.inputVector);
+  const k = u2Inputs[0].length;
   const trueSum = new Array(k).fill(0);
 
-  for (const input of aliveInputs) {
+  for (const input of u2Inputs) {
     for (let i = 0; i < k; i++) {
       trueSum[i] += input[i];
     }
   }
 
-  const trueAverage = trueSum.map((sum) => sum / aliveInputs.length);
+  const trueAverage = trueSum.map((sum) => sum / u2Inputs.length);
 
   // Compare with protocol result
   const protocolAverage = round4Data.dequantizedAverage!;
@@ -618,7 +638,7 @@ export function verifyProtocolCorrectness(
     expected: trueAverage,
     actual: protocolAverage,
     details: passed
-      ? ['All values within tolerance']
+      ? [`All values within tolerance (U₂ = ${u2Clients.length} clients)`]
       : protocolAverage.map(
           (val, i) =>
             `Element ${i}: expected ${trueAverage[i].toFixed(4)}, got ${val.toFixed(4)}`

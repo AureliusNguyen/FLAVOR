@@ -24,38 +24,38 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
   }, [currentStep, setCurrentProtocolRound]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-white">
+    <div className="w-full max-w-6xl mx-auto space-y-6 p-6 text-foreground">
       {/* Step 0: Round 0 Overview */}
       <StepContent isActive={currentStep === 0} stepIndex={0}>
         <div className="space-y-6 pb-26">
           <div className="text-center">
             <Badge className="mb-4 bg-purple-600">Round 0</Badge>
             <h2 className="text-3xl font-bold mb-2">Advertise Keys</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Clients generate and broadcast cryptographic keys
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Key className="h-5 w-5 text-yellow-400" />
                   Diffie-Hellman Key Generation
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-foreground/80">
                   Each client generates a DH key pair for pairwise key
                   agreement:
                 </p>
-                <div className="bg-gray-900 p-3 rounded-lg space-y-2">
+                <div className="bg-muted p-3 rounded-lg space-y-2">
                   <MathBlock>
                     {
                       "a_u \\xleftarrow{\\$} \\mathbb{Z}_q, \\quad A_u = g^{a_u} \\mod p"
                     }
                   </MathBlock>
-                  <div className="text-xs text-gray-400 border-t border-gray-700 pt-2 mt-2">
+                  <div className="text-xs text-muted-foreground border-t border-border pt-2 mt-2">
                     <strong>Example (Client 1):</strong>
                     {(() => {
                       const keyPair = protocolData.round1?.dhKeyPairs?.get(1);
@@ -82,25 +82,25 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                     })()}
                   </div>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground">
                   Private key <MathTex>{"a_u"}</MathTex> stays secret; public key <MathTex>{"A_u"}</MathTex> is broadcast
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
+                <CardTitle className="text-foreground flex items-center gap-2">
                   <Share2 className="h-5 w-5 text-blue-400" />
                   Secret Shares
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-foreground/80">
                   Each client creates Shamir shares of their private key and
                   self-mask:
                 </p>
-                <div className="bg-gray-900 p-3 rounded-lg text-sm">
+                <div className="bg-muted p-3 rounded-lg text-sm">
                   <div className="mb-2">
                     • Share private key <MathTex>{"a_u"}</MathTex> with{" "}
                     <MathTex>{"(T, N)"}</MathTex> threshold.  
@@ -110,34 +110,34 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                     <MathTex>{"(T, N)"}</MathTex> threshold
                   </div>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-muted-foreground">
                   Enables reconstruction if client drops out
                 </p>
               </CardContent>
             </Card>
           </div>
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">DH Parameters</CardTitle>
+              <CardTitle className="text-foreground">DH Parameters</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-gray-900 p-4 rounded-lg font-mono text-sm">
+              <div className="bg-muted p-4 rounded-lg font-mono text-sm">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="text-gray-400">Prime (p):</span>
+                    <span className="text-muted-foreground">Prime (p):</span>
                     <div className="text-blue-300 break-all">
                       {config.dhPrime.toString()}
                     </div>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       (<MathTex>{"2^{16} + 1"}</MathTex>, a Fermat prime)
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-400">Generator (g):</span>
+                    <span className="text-muted-foreground">Generator (g):</span>
                     <div className="text-green-300">
                       {config.dhGenerator.toString()}
                     </div>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted-foreground">
                       (primitive root<MathTex>{"\\mod p"}</MathTex>)
                     </span>
                   </div>
@@ -157,16 +157,15 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   transition={{ delay: idx * 0.05 }}
                 >
                   <Card
-                    className="border-2"
+                    className="border-2 bg-card/80"
                     style={{
                       borderColor: client.color,
-                      backgroundColor: "rgba(31, 41, 55, 0.8)",
                     }}
                   >
                     <CardContent className="p-3 space-y-2">
                       <div className="flex items-center gap-2">
                         <div
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-foreground text-xs font-bold"
                           style={{ backgroundColor: client.color }}
                         >
                           {client.id}
@@ -175,9 +174,9 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           {client.name}
                         </span>
                       </div>
-                      <div className="text-xs font-mono bg-gray-900 p-2 rounded space-y-1">
+                      <div className="text-xs font-mono bg-muted p-2 rounded space-y-1">
                         <div>
-                          <span className="text-gray-400">
+                          <span className="text-muted-foreground">
                             Private <MathTex>{"a_u"}</MathTex>:
                           </span>
                           <span className="text-yellow-300 ml-1">
@@ -185,14 +184,14 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-400">
+                          <span className="text-muted-foreground">
                             Public <MathTex>{"A_u"}</MathTex>:
                           </span>
                           <span className="text-green-300 ml-1">
                             {keyPair?.public?.toString() || "..."}
                           </span>
                         </div>
-                        <div className="text-[10px] text-gray-500 pt-1 border-t border-gray-700">
+                        <div className="text-[10px] text-muted-foreground pt-1 border-t border-border">
                           <MathBlock>
                             {keyPair
                               ? `${config.dhGenerator.toString()}^{${keyPair.private.toString()}} \\mod ${config.dhPrime.toString()} = ${keyPair.public.toString()}`
@@ -214,25 +213,25 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
         <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Shamir Secret Sharing</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Clients create (T, N) threshold shares for dropout recovery
             </p>
           </div>
 
           {/* Lagrange Interpolation Formula - Show First */}
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-foreground">
                 Lagrange Interpolation Formula
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-foreground/80">
                 Given <MathTex>{"T"}</MathTex> shares (points on the
                 polynomial), we can reconstruct the secret using:
               </p>
 
-              <div className="bg-gray-900 p-4 rounded-lg overflow-x-auto">
+              <div className="bg-muted p-4 rounded-lg overflow-x-auto">
                 <MathBlock>
                   {
                     "f(0) = \\sum_{i=1}^{T} y_i \\cdot L_i(0), \\quad \\text{where } L_i(0) = \\prod_{j \\neq i} \\frac{-x_j}{x_i - x_j}"
@@ -240,8 +239,8 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                 </MathBlock>
               </div>
 
-              <div className="bg-gray-900 p-4 rounded-lg overflow-x-auto">
-                <p className="text-xs text-gray-400 mb-2">
+              <div className="bg-muted p-4 rounded-lg overflow-x-auto">
+                <p className="text-xs text-muted-foreground mb-2">
                   General form for any <MathTex>{"x"}</MathTex>:
                 </p>
                 <MathBlock>
@@ -254,21 +253,21 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
           </Card>
 
           {/* Polynomial Construction and Evaluations */}
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
+              <CardTitle className="text-foreground flex items-center gap-2">
                 <Share2 className="h-5 w-5 text-blue-400" />
                 Polynomial Construction
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-muted p-4 rounded-lg">
                 <MathBlock>
                   {
                     "f(x) = s + a_1 x + a_2 x^2 + \\ldots + a_{T-1} x^{T-1} \\mod p"
                   }
                 </MathBlock>
-                <p className="text-xs text-center mt-2 text-gray-400">
+                <p className="text-xs text-center mt-2 text-muted-foreground">
                   Secret <MathTex>{"s"}</MathTex> is hidden as the constant
                   term; coefficients{" "}
                   <MathTex>{"a_1, \\ldots, a_{T-1}"}</MathTex> are random
@@ -276,7 +275,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
               </div>
 
               {/* Live Example using Client 1's DH Private Key */}
-              <div className="bg-gray-900 p-4 rounded-lg border border-purple-500/30">
+              <div className="bg-muted p-4 rounded-lg border border-purple-500/30">
                 <p className="font-semibold text-purple-300 mb-3">
                   Live Example: Sharing Client 1's Private Key (<MathTex>{"T = "}</MathTex> {config.T}, <MathTex>{"N = "}</MathTex> {config.N})
                 </p>
@@ -285,7 +284,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   const keyPair = protocolData.round1?.dhKeyPairs?.get(1);
                   if (!keyPair) {
                     return (
-                      <div className="text-gray-400">
+                      <div className="text-muted-foreground">
                         Loading protocol data...
                       </div>
                     );
@@ -327,14 +326,14 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   return (
                     <div className="space-y-3 text-sm">
                       <div className="font-mono">
-                        <span className="text-gray-400">Secret to share: </span>
+                        <span className="text-muted-foreground">Secret to share: </span>
                         <span className="text-yellow-300">
                           <MathTex>{"s = "}</MathTex> {secret} (Client 1's DH private key<MathTex>{"\\mod p"}</MathTex>)
                         </span>
                       </div>
 
                       <div>
-                        <span className="text-gray-400">
+                        <span className="text-muted-foreground">
                           Polynomial (degree {config.T - 1}) with random
                           coefficients:
                         </span>
@@ -349,14 +348,14 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                               .join(" + ")} \\mod ${p.toLocaleString()}`}
                           </MathBlock>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-xs text-muted-foreground mt-1">
                           where <MathTex>{"p = "}</MathTex> {p.toLocaleString()}{" "}
                           = <MathTex>{"2^{16} + 1"}</MathTex> (Fermat prime)
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-700 pt-3">
-                        <span className="text-gray-400 font-semibold">
+                      <div className="border-t border-border pt-3">
+                        <span className="text-muted-foreground font-semibold">
                           Share evaluations{" "}
                           <MathTex>{"f(0), f(1), \\ldots, f(N)"}</MathTex>:
                         </span>
@@ -367,7 +366,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                               className={`p-2 rounded ${
                                 x === 0
                                   ? "bg-yellow-900/30 border border-yellow-500/50"
-                                  : "bg-gray-800"
+                                  : "bg-card"
                               }`}
                             >
                               <span
@@ -387,7 +386,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-700 pt-3 text-xs text-gray-400">
+                      <div className="border-t border-border pt-3 text-xs text-muted-foreground">
                         <strong>Shares distributed:</strong> Client 1 keeps{" "}
                         <MathTex>{"f(1) = "}</MathTex>{" "}
                         {evaluations[1]?.fx.toLocaleString()}, Client 2 gets{" "}
@@ -411,11 +410,11 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
           {/* Purpose of shares */}
           <div className="grid md:grid-cols-2 gap-4">
             <Card className="bg-purple-900/30 border-purple-500/50">
-              <CardContent className="pt-4">
+              <CardContent className="pt-2">
                 <p className="font-semibold text-purple-300 mb-2">
                   Private Key Shares
                 </p>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-foreground/80">
                   Each client creates T-of-N shares of their DH private key{" "}
                   <MathTex>{"a_u"}</MathTex>. If client drops, others can
                   reconstruct <MathTex>{"a_u"}</MathTex> to compute pairwise
@@ -424,11 +423,11 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
               </CardContent>
             </Card>
             <Card className="bg-blue-900/30 border-blue-500/50">
-              <CardContent className="pt-4">
+              <CardContent className="pt-2">
                 <p className="font-semibold text-blue-300 mb-2">
                   Self-Mask Shares
                 </p>
-                <p className="text-sm text-gray-300">
+                <p className="text-sm text-foreground/80">
                   Each client creates T-of-N shares of their self-mask{" "}
                   <MathTex>{"b_u"}</MathTex>. If client drops, others can
                   reconstruct <MathTex>{"b_u"}</MathTex> to remove it from the
@@ -439,7 +438,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
           </div>
 
           <Card className="bg-green-900/30 border-green-500">
-            <CardContent className="pt-4">
+            <CardContent className="flex items-center">
               <p className="text-sm text-green-200">
                 <strong>Threshold:</strong> With <MathTex>{"T = "}</MathTex> {config.T} out of <MathTex>{"N = "}</MathTex> {config.N}, any <MathTex>{"T"}</MathTex> clients can reconstruct a dropped client's
                 secrets, but fewer than <MathTex>{"T"}</MathTex> clients learn nothing.
@@ -456,14 +455,14 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
             <h2 className="text-3xl font-bold mb-2">
               Polynomial Reconstruction
             </h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Visualizing how Shamir shares form points on a polynomial curve
             </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-foreground">
                 Shares as Points on a Curve
               </CardTitle>
             </CardHeader>
@@ -472,7 +471,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                 const keyPair = protocolData.round1?.dhKeyPairs?.get(1);
                 if (!keyPair) {
                   return (
-                    <div className="text-gray-400 text-center">
+                    <div className="text-muted-foreground text-center">
                       Loading protocol data...
                     </div>
                   );
@@ -545,7 +544,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                 return (
                   <>
                     {/* SVG Polynomial Curve */}
-                    <div className="relative h-64 bg-gray-900 rounded-lg overflow-hidden">
+                    <div className="relative h-64 bg-muted rounded-lg overflow-hidden">
                       <svg
                         className="absolute inset-0 w-full h-full"
                         viewBox="0 0 100 100"
@@ -559,7 +558,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           y2="85"
                           stroke="currentColor"
                           strokeWidth="0.3"
-                          className="text-gray-600"
+                          className="text-muted-foreground"
                         />
                         {/* X-axis at y=85 */}
                         <line
@@ -569,7 +568,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           y2="85"
                           stroke="currentColor"
                           strokeWidth="0.3"
-                          className="text-gray-600"
+                          className="text-muted-foreground"
                         />
 
                         {/* Polynomial curve through actual points */}
@@ -618,11 +617,11 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                       />
 
                       {/* Labels */}
-                      <span className="absolute left-1 top-1/2 text-xs text-gray-400 -rotate-90 transform -translate-y-1/2">
-                        f(x)
+                      <span className="absolute left-1 top-1/2 text-xs text-muted-foreground -rotate-90 transform -translate-y-1/2">
+                        <MathTex>{"f(x)"}</MathTex>
                       </span>
-                      <span className="absolute bottom-1 left-1/2 text-xs text-gray-400">
-                        x
+                      <span className="absolute bottom-1 left-1/2 text-xs text-muted-foreground">
+                        <MathTex>{"x"}</MathTex>
                       </span>
                       <span
                         className="absolute text-xs font-medium z-20 text-yellow-300"
@@ -631,14 +630,14 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                         Secret
                       </span>
                       <span
-                        className="absolute text-[10px] text-gray-500"
+                        className="absolute text-[10px] text-muted-foreground"
                         style={{ left: "6%", top: "87%" }}
                       >
-                        0
+                        <MathTex>{"0"}</MathTex>
                       </span>
                     </div>
 
-                    <p className="text-sm text-center text-gray-300 mt-4">
+                    <p className="text-sm text-center text-foreground/80 mt-4">
                       The polynomial passes through all share points and{" "}
                       <span className="text-yellow-300"><MathTex>{"f(0) = "}</MathTex> secret = {secret}</span>
                     </p>
@@ -649,19 +648,19 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
           </Card>
 
           {/* Lagrange Interpolation Formula */}
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-foreground">
                 Lagrange Interpolation Formula
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-foreground/80">
                 Given <MathTex>{"T"}</MathTex> shares (points on the curve), we can reconstruct the
                 secret using:
               </p>
 
-              <div className="bg-gray-900 p-4 rounded-lg overflow-x-auto">
+              <div className="bg-muted p-4 rounded-lg overflow-x-auto">
                 <MathBlock>
                   {
                     "P(x) = \\sum_{i=1}^{T} y_i \\prod_{j \\neq i} \\frac{x - x_j}{x_i - x_j}"
@@ -669,8 +668,8 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                 </MathBlock>
               </div>
 
-              <div className="bg-gray-900 p-4 rounded-lg overflow-x-auto">
-                <p className="text-xs text-gray-400 mb-2">
+              <div className="bg-muted p-4 rounded-lg overflow-x-auto">
+                <p className="text-xs text-muted-foreground mb-2">
                   To find the secret, evaluate at <MathTex>{"x = 0"}</MathTex>:
                 </p>
                 <MathBlock>
@@ -685,7 +684,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   <p className="font-semibold text-green-300 mb-2">
                     Reconstruction Guarantee
                   </p>
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-foreground/80">
                     Any <strong><MathTex>{"T = "}</MathTex> {config.T}</strong> shares can exactly
                     reconstruct the polynomial and recover <MathTex>{"f(0)"}</MathTex>
                   </p>
@@ -694,7 +693,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   <p className="font-semibold text-red-300 mb-2">
                     Security Property
                   </p>
-                  <p className="text-sm text-gray-300">
+                  <p className="text-sm text-foreground/80">
                     With <strong><MathTex>{"< T"}</MathTex></strong> shares, all possible secrets
                     are equally likely (perfect secrecy)
                   </p>
@@ -710,12 +709,12 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
         <div className="space-y-6">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Public Key Broadcast</h2>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Clients share their public keys with the server
             </p>
           </div>
 
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-card border-border">
             <CardContent className="pt-6">
               <div className="flex items-center justify-center gap-8 flex-wrap">
                 {clients.map((client, idx) => (
@@ -727,7 +726,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                     className="flex flex-col items-center"
                   >
                     <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold"
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-foreground font-bold"
                       style={{ backgroundColor: client.color }}
                     >
                       {client.id}
@@ -749,13 +748,13 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="bg-gray-900 p-6 rounded-xl border border-gray-600"
+                  className="bg-muted p-6 rounded-xl border border-border"
                 >
                   <div className="text-center">
                     <div className="text-lg font-bold text-purple-400 mb-2">
                       Server
                     </div>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm text-muted-foreground">
                       Received {clients.length} public keys
                     </div>
                     <div className="mt-2 flex gap-1 justify-center">
@@ -774,7 +773,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
           </Card>
 
           <Card className="bg-blue-900/30 border-blue-500">
-            <CardContent className="pt-6">
+            <CardContent className="flex items-center justify-center">
               <p className="text-center text-blue-200">
                 <strong>Round 0 Complete:</strong> All clients have advertised
                 their public keys. Next, they will establish pairwise shared
