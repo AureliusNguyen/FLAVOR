@@ -52,7 +52,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
               animate={{ scale: 1 }}
               className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6"
             >
-              <CheckCircle className="h-10 w-10 text-green-400" />
+              <CheckCircle className="h-10 w-10 text-green-600 dark:text-green-200" />
             </motion.div>
             <h2 className="text-3xl font-bold mb-2">
               Secure Aggregation Complete!
@@ -65,7 +65,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
           {/* Result Card */}
           <Card className="bg-green-900/30 border-green-500">
             <CardHeader>
-              <CardTitle className="text-green-300 flex items-center gap-2">
+              <CardTitle className="text-green-600 dark:text-green-200 flex items-center gap-2">
                 <Shield className="h-5 w-5" />
                 Final Aggregated Result
               </CardTitle>
@@ -77,7 +77,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                     <p className="text-sm text-muted-foreground mb-2">
                       Average Gradient Vector:
                     </p>
-                    <div className="font-mono text-xl text-center text-green-300">
+                    <div className="font-mono text-xl text-center text-green-600 dark:text-green-200">
                       [
                       {protocolData.round4.dequantizedAverage
                         .map((v: number) => v.toFixed(6))
@@ -127,7 +127,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
 
                   {/* Rounding Error Explanation */}
                   <div className="bg-muted p-4 rounded-lg border border-blue-500/30 mt-4">
-                    <p className="font-semibold text-blue-300 mb-3">
+                    <p className="font-semibold text-blue-600 dark:text-blue-200 mb-3">
                       Why Small Differences Are Expected
                     </p>
                     <div className="text-sm text-foreground/80 space-y-3">
@@ -137,7 +137,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                           integers:
                         </p>
                         <div className="bg-card p-2 rounded font-mono text-xs">
-                          <div className="text-yellow-300">
+                          <div className="text-yellow-600 dark:text-yellow-200">
                             <MathTex>
                               {
                                 "\\tilde{x} = \\text{round}(x \\times Q) \\mod R"
@@ -160,7 +160,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                             <span className="text-muted-foreground">
                               Client quantizes:
                             </span>{" "}
-                            <span className="text-blue-300">
+                            <span className="text-blue-600 dark:text-blue-200">
                               <MathTex>
                                 {`0.1234 \\times ${config.Q.toLocaleString()} = ${(
                                   0.1234 * config.Q
@@ -175,7 +175,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                             <span className="text-muted-foreground">
                               After aggregation & dequantization:
                             </span>{" "}
-                            <span className="text-green-300">
+                            <span className="text-green-600 dark:text-green-200">
                               <MathTex>
                                 {`\\frac{${Math.round(
                                   0.1234 * config.Q
@@ -286,7 +286,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">
+                      <p className="font-semibold text-green-600 dark:text-green-200">
                         Input Privacy
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -298,7 +298,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">
+                      <p className="font-semibold text-green-600 dark:text-green-200">
                         Pairwise Mask Cancellation
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -312,7 +312,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">
+                      <p className="font-semibold text-green-600 dark:text-green-200">
                         Dropout Resilience
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -324,7 +324,7 @@ export function BonawitzResultSection({ currentStep }: Props) {
                   <div className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-green-300">
+                      <p className="font-semibold text-green-600 dark:text-green-200">
                         Honest Majority
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -426,14 +426,14 @@ export function BonawitzResultSection({ currentStep }: Props) {
 
           <Card className="bg-purple-900/30 border-purple-500">
             <CardContent className="flex flex-col items-center justify-center">
-              <p className="text-center text-purple-200 mb-3">
-                <strong>Read the Original Paper:</strong>
+              <p className="text-center text-purple-600 dark:text-purple-200 mb-3">
+                <strong>Read the Original Paper</strong>
               </p>
               <a
                 href="https://arxiv.org/abs/1611.04482"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-purple-300 hover:text-purple-100 transition-colors"
+                className="flex items-center gap-2 text-purple-600 dark:text-purple-200 hover:text-purple-100 transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
                 Practical Secure Aggregation for Privacy-Preserving Machine

@@ -64,7 +64,7 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
                 </MathBlock>
               </div>
               <Alert className="bg-green-900/30 border-green-500">
-                <AlertDescription className="text-green-200">
+                <AlertDescription className="text-green-600 dark:text-green-200">
                   Each client can compute the shared secret using their private
                   key and the other's public key. The server cannot compute
                   these secrets without knowing private keys.
@@ -77,7 +77,7 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
 
       {/* Step 1: Shared Seeds Matrix */}
       <StepContent isActive={currentStep === 1} stepIndex={1}>
-        <div className="space-y-6">
+        <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Pairwise Shared Seeds</h2>
             <p className="text-muted-foreground">
@@ -88,11 +88,20 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
           {protocolData.round1 && (
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-foreground">
-                  Shared Seeds Matrix (
-                  {protocolData.round1.sharedSeeds?.size || 0} pairs)
+                <CardTitle className="text-foreground flex flex-col items-center gap-1 sm:flex-row sm:gap-2">
+                  Shared Seeds Matrix{" "}
+                  <span className="text-xs text-muted-foreground">
+                    (
+                    <MathTex>
+                      {`\\binom{n}{2} = \\frac{n(n-1)}{2} = \\frac{${config.N}(${
+                        config.N
+                      }-1)}{2} = ${((config.N * (config.N - 1)) / 2).toString()}`}
+                    </MathTex>{" "}
+                    pairs )
+                  </span>
                 </CardTitle>
               </CardHeader>
+
               <CardContent>
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs font-mono">
@@ -138,7 +147,7 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
                             return (
                               <td
                                 key={v.id}
-                                className="p-2 border border-border text-center text-green-300"
+                                className="p-2 border border-border text-center text-green-400"
                               >
                                 {seed || "-"}
                               </td>
@@ -168,9 +177,12 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
       <StepContent isActive={currentStep === 2} stepIndex={2}>
         <div className="space-y-6 pb-26">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-2">Early Dropout Simulation</h2>
+            <h2 className="text-3xl font-bold mb-2">
+              Early Dropout Simulation
+            </h2>
             <p className="text-muted-foreground">
-              Simulate clients disconnecting <strong>before</strong> submitting masked inputs
+              Simulate clients disconnecting <strong>before</strong> submitting
+              masked inputs
             </p>
           </div>
 
@@ -183,21 +195,25 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
             </CardHeader>
             <CardContent className="space-y-4">
               <Alert className="bg-orange-900/30 border-orange-500">
-                <AlertDescription className="text-orange-200">
-                  <strong>Early dropout (U₁ \ U₂):</strong> These clients completed key exchange but will
-                  disconnect before Round 2. They will <strong>not</strong> submit a masked input, so their
-                  gradient is not included in the aggregate. However, their <strong>pairwise keys</strong> must
-                  be reconstructed so other clients can remove the pairwise masks.
+                <AlertDescription className="text-orange-900 dark:text-orange-200">
+                  <strong>Early dropout <MathTex>{"(U_1 \\setminus U_2)"}</MathTex>:</strong> These clients
+                  completed key exchange but will disconnect before Round 2.
+                  They will <strong>not</strong> submit a masked input, so their
+                  gradient is not included in the aggregate. However, their <MathTex>{"s_{uv}"}</MathTex> <strong>pairwise keys</strong> must be reconstructed so other
+                  clients can remove the pairwise masks.
                 </AlertDescription>
               </Alert>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {clients.map((client) => {
-                  const isEarlyDropout = client.dropoutPhase === "after_share_keys";
+                  const isEarlyDropout =
+                    client.dropoutPhase === "after_share_keys";
                   return (
                     <Card
                       key={client.id}
-                      className={`border-2 ${isEarlyDropout ? "bg-orange-500/10" : "bg-card/80"}`}
+                      className={`border-2 ${
+                        isEarlyDropout ? "bg-orange-500/10" : "bg-card/80"
+                      }`}
                       style={{
                         borderColor: isEarlyDropout ? "#f97316" : client.color,
                       }}
@@ -206,12 +222,20 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-6 h-6 rounded-full flex items-center justify-center text-foreground text-xs font-bold ${isEarlyDropout ? "opacity-50" : ""}`}
+                              className={`w-6 h-6 rounded-full flex items-center justify-center text-foreground text-xs font-bold ${
+                                isEarlyDropout ? "opacity-50" : ""
+                              }`}
                               style={{ backgroundColor: client.color }}
                             >
                               {client.id}
                             </div>
-                            <span className={`text-sm font-medium ${isEarlyDropout ? "line-through text-muted-foreground" : ""}`}>
+                            <span
+                              className={`text-sm font-medium ${
+                                isEarlyDropout
+                                  ? "line-through text-muted-foreground"
+                                  : ""
+                              }`}
+                            >
                               {client.name}
                             </span>
                           </div>
@@ -237,7 +261,9 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
                         {isEarlyDropout && (
                           <div className="mt-2 flex items-center gap-1 text-xs text-orange-400">
                             <UserX className="h-3 w-3" />
-                            <span>Won't submit <MathTex>{"y_u"}</MathTex></span>
+                            <span>
+                              Won't submit <MathTex>{"y_u"}</MathTex>
+                            </span>
                           </div>
                         )}
                       </CardContent>
@@ -249,7 +275,7 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
               <div className="grid md:grid-cols-2 gap-4">
                 <Card className="bg-green-900/30 border-green-500">
                   <CardContent className="pt-4">
-                    <p className="font-semibold text-green-300">
+                    <p className="font-semibold text-green-900 dark:text-green-200">
                       Continuing to Round 2
                     </p>
                     <p className="text-2xl font-bold">
@@ -262,11 +288,15 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
                 </Card>
                 <Card className="bg-orange-900/30 border-orange-500">
                   <CardContent className="pt-4">
-                    <p className="font-semibold text-orange-300">
-                      Early Dropouts <MathTex>{"(U_1 \\setminus U_2)"}</MathTex>
+                    <p className="font-semibold text-orange-900 dark:text-orange-200">
+                      Early Dropouts (<MathTex>{"U_1 \\setminus U_2"}</MathTex>)
                     </p>
                     <p className="text-2xl font-bold">
-                      {clients.filter((c) => c.dropoutPhase === "after_share_keys").length}
+                      {
+                        clients.filter(
+                          (c) => c.dropoutPhase === "after_share_keys"
+                        ).length
+                      }
                     </p>
                     <p className="text-xs text-muted-foreground">
                       Pairwise keys will be reconstructed
@@ -275,12 +305,14 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
                 </Card>
               </div>
 
-              {clients.filter((c) => c.dropoutPhase === "alive").length < config.T && (
+              {clients.filter((c) => c.dropoutPhase === "alive").length <
+                config.T && (
                 <Alert variant="destructive">
                   <AlertDescription>
-                    Warning: Too many dropouts! Need at least T={config.T} clients
-                    to continue. Currently only{" "}
-                    {clients.filter((c) => c.dropoutPhase === "alive").length} continuing.
+                    Warning: Too many dropouts! Need at least T={config.T}{" "}
+                    clients to continue. Currently only{" "}
+                    {clients.filter((c) => c.dropoutPhase === "alive").length}{" "}
+                    continuing.
                   </AlertDescription>
                 </Alert>
               )}
@@ -288,9 +320,11 @@ export function BonawitzShareKeysSection({ currentStep }: Props) {
           </Card>
 
           <Card className="bg-purple-900/30 border-purple-500">
-            <CardContent className="flex items-center justify-center py-4">
-              <p className="text-center text-purple-200">
-                <strong>Next:</strong> Clients still online will compute and submit their masked inputs <MathTex>{"y_u"}</MathTex> in Round 2.
+            <CardContent className="flex items-center justify-center">
+              <p className="text-center text-purple-900 dark:text-purple-200">
+                <strong>Next:</strong> Clients still online will compute and
+                submit their masked inputs <MathTex>{"y_u"}</MathTex> in Round
+                2.
               </p>
             </CardContent>
           </Card>

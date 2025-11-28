@@ -62,28 +62,28 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
               <div className="grid md:grid-cols-3 gap-4">
                 <Card className="bg-blue-900/30 border-blue-500">
                   <CardContent className="pt-2">
-                    <p className="font-semibold text-blue-300 mb-1"><MathTex>{"x_u"}</MathTex></p>
+                    <p className="font-semibold text-blue-600 dark:text-blue-200 mb-1"><MathTex>{"x_u"}</MathTex></p>
                     <p className="text-xs text-foreground/80">Client's quantized gradient vector</p>
                   </CardContent>
                 </Card>
                 <Card className="bg-green-900/30 border-green-500">
                   <CardContent className="pt-2">
-                    <p className="font-semibold text-green-300 mb-1"><MathTex>{"p_{uv}"}</MathTex></p>
+                    <p className="font-semibold text-green-600 dark:text-green-200 mb-1"><MathTex>{"p_{uv}"}</MathTex></p>
                     <p className="text-xs text-foreground/80">PRG output from shared seed <MathTex>{"s_{uv}"}</MathTex></p>
                   </CardContent>
                 </Card>
                 <Card className="bg-purple-900/30 border-purple-500">
                   <CardContent className="pt-2">
-                    <p className="font-semibold text-purple-300 mb-1"><MathTex>{"b_u"}</MathTex></p>
+                    <p className="font-semibold text-purple-600 dark:text-purple-200 mb-1"><MathTex>{"b_u"}</MathTex></p>
                     <p className="text-xs text-foreground/80">Random self-mask (secret-shared for recovery)</p>
                   </CardContent>
                 </Card>
               </div>
             </CardContent>
           </Card>
-
+    
           <Alert className="bg-green-900/30 border-green-500">
-            <AlertDescription className="text-green-200">
+            <AlertDescription className="text-green-600 dark:text-green-200">
               <strong>Key Insight:</strong> Pairwise masks cancel perfectly when summed!
               Client u adds <MathTex>{"+p_{uv}"}</MathTex>, client v subtracts <MathTex>{"-p_{uv}"}</MathTex> → net contribution is 0.
             </AlertDescription>
@@ -103,8 +103,8 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
           {earlyDropouts.length > 0 && (
             <Alert className="bg-orange-900/30 border-orange-500">
               <WifiOff className="h-4 w-4 text-orange-400" />
-              <AlertDescription className="text-orange-200">
-                <strong>Early dropouts (U₁ \ U₂):</strong>{' '}
+              <AlertDescription className="text-orange-900 dark:text-orange-200">
+                <strong>Early dropouts <MathTex>{"(U_1 \\setminus U_2)"}</MathTex>:</strong>{' '}
                 {earlyDropouts.map(c => c.name).join(', ')}
                 <br />
                 These clients disconnected after Round 1 and will not submit masked inputs.
@@ -116,13 +116,13 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
           {/* Late Dropout Simulation Controls */}
           <Card className="bg-red-900/30 border-red-500">
             <CardHeader>
-              <CardTitle className="text-red-300 flex items-center gap-2">
+              <CardTitle className="text-red-600 dark:text-red-200 flex items-center gap-2">
                 <UserX className="h-5 w-5" />
-                Late Dropout Simulation (U₂ \ U₃)
+                Late Dropout Simulation (<MathTex>{"U_2 \\setminus U_3"}</MathTex>)
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-foreground/80">
+              <p className="text-sm text-red-900 dark:text-red-200">
                 Select clients who will <strong>submit their masked input</strong> but then disconnect
                 before Round 4 (unmasking). Their self-mask <MathTex>{"b_u"}</MathTex> will need to be reconstructed.
               </p>
@@ -175,11 +175,11 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
               <div className="flex gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-green-500" />
-                  <span className="text-muted-foreground">Will stay alive <MathTex>{"(U_3)"}</MathTex>: {u3Clients.length}</span>
+                  <span className="text-muted-foreground">Will stay alive <MathTex>{`(U_3): ${u3Clients.length}`}</MathTex></span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
-                  <span className="text-muted-foreground">Late dropouts <MathTex>{"(U_2 \\setminus U_3)"}</MathTex>: {lateDropouts.length}</span>
+                  <span className="text-muted-foreground">Late dropouts <MathTex>{`(U_2 \\setminus U_3): ${lateDropouts.length}`}</MathTex></span>
                 </div>
               </div>
               {u3Clients.length < config.T && (
@@ -237,25 +237,25 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
                       <div className="text-xs font-mono space-y-1 bg-muted p-2 rounded">
                         <div>
                           <span className="text-muted-foreground"><MathTex>{"x_u"}</MathTex> = </span>
-                          <span className={isEarlyDropout ? "text-muted-foreground" : "text-blue-300"}>
+                          <span className={isEarlyDropout ? "text-muted-foreground" : "text-blue-600 dark:text-blue-200"}>
                             {isEarlyDropout ? '[N/A - not in U₂]' : `[${client.quantizedVector.join(', ')}]`}
                           </span>
                         </div>
                         <div>
                           <span className="text-muted-foreground"><MathTex>{"y_u"}</MathTex> = </span>
-                          <span className={isEarlyDropout ? "text-muted-foreground" : "text-purple-300"}>
+                          <span className={isEarlyDropout ? "text-muted-foreground" : "text-purple-600 dark:text-purple-200"}>
                             {isEarlyDropout ? '[Not submitted]' : `[${masked ? masked.join(', ') : '...'}]`}
                           </span>
                         </div>
                       </div>
 
                       {isEarlyDropout ? (
-                        <div className="flex items-center gap-2 text-sm text-orange-400">
+                        <div className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-200">
                           <WifiOff className="h-4 w-4" />
                           <span>Disconnected in Round 1 <MathTex>{"(U_1 \\setminus U_2)"}</MathTex></span>
                         </div>
                       ) : isLateDropout ? (
-                        <div className="flex items-center gap-2 text-sm text-red-400">
+                        <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
                           <UserX className="h-4 w-4" />
                           <span>Will disconnect after submitting <MathTex>{"(U_2 \\setminus U_3)"}</MathTex></span>
                         </div>
@@ -264,7 +264,7 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: idx * 0.1 + 0.3 }}
-                          className="flex items-center gap-2 text-sm text-green-400"
+                          className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400"
                         >
                           <Send className="h-4 w-4" />
                           <span>Sent to server in <MathTex>{"U_3"}</MathTex></span>
@@ -296,7 +296,7 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
             </CardHeader>
             <CardContent className="space-y-4">
               <Alert className="bg-cyan-900/30 border-cyan-500">
-                <AlertDescription className="text-cyan-200">
+                <AlertDescription className="text-cyan-900 dark:text-cyan-200">
                   The server receives {u2Clients.length} masked inputs from <MathTex>{"U_2"}</MathTex> and computes their sum.
                   <strong> It cannot see individual gradients</strong> - only masked values!
                 </AlertDescription>
@@ -324,7 +324,7 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
               {protocolData.round2?.serverAggregatedMasked && (
                 <Card className="bg-cyan-900/30 border-cyan-500">
                   <CardContent className="pt-4">
-                    <p className="font-semibold text-cyan-300 mb-2">Aggregated Masked Sum:</p>
+                    <p className="font-semibold text-cyan-600 dark:text-cyan-200 mb-2">Aggregated Masked Sum:</p>
                     <div className="font-mono text-lg text-center">
                       [{protocolData.round2.serverAggregatedMasked.join(', ')}]
                     </div>
@@ -339,7 +339,7 @@ export function BonawitzMaskedInputSection({ currentStep }: Props) {
 
           <Card className="bg-purple-900/30 border-purple-500">
             <CardContent className="flex items-center justify-center">
-              <p className="text-center text-purple-200">
+              <p className="text-center text-purple-600 dark:text-purple-200">
                 <strong>Next:</strong> Server will broadcast which clients are still alive (<MathTex>{"U_3"}</MathTex>),
                 so all participants know whose self-masks need to be reconstructed via Shamir Secret Sharing.
               </p>

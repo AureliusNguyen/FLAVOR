@@ -120,15 +120,20 @@ export default function HomePage() {
                     {workflow.subtitle}
                   </p>
 
-                  {workflow.reference && workflow.referenceUrl && (
-                    <div className="mb-3">
-                      <a href={workflow.referenceUrl} target="_blank" rel="noopener noreferrer">
+                  {/* always reserve space for the reference row */}
+                  <div className="mb-3 h-8 flex items-center">
+                    {workflow.reference && workflow.referenceUrl && (
+                      <a
+                        href={workflow.referenceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Badge className="bg-purple-500/20 text-purple-600 dark:text-purple-300 border-purple-500/30 hover:bg-purple-500/30 cursor-pointer transition-colors">
                           {workflow.reference}
                         </Badge>
                       </a>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </CardHeader>
 
                 <CardContent className="flex flex-col flex-1">

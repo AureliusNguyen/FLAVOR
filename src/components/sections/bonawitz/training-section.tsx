@@ -101,7 +101,7 @@ export function BonawitzTrainingSection({ currentStep }: Props) {
 
           <Card className="bg-purple-500/20 border-purple-500/30 dark:bg-purple-900/30 dark:border-purple-500">
             <CardContent className="flex items-center justify-center">
-              <p className="text-center text-foreground/80">
+              <p className="text-center text-purple-900 dark:text-purple-200">
                 In federated learning, clients train local models and only share model updates (gradients).
                 The secure aggregation protocol ensures these gradients remain private during aggregation.
               </p>
@@ -112,7 +112,7 @@ export function BonawitzTrainingSection({ currentStep }: Props) {
 
       {/* Step 1: Training in Progress */}
       <StepContent isActive={currentStep === 1} stepIndex={1}>
-        <div className="space-y-6">
+        <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Training in Progress</h2>
             <p className="text-muted-foreground">Clients are computing gradient updates locally</p>
@@ -197,7 +197,7 @@ export function BonawitzTrainingSection({ currentStep }: Props) {
                       </div>
                       <span className="text-sm font-medium">{client.name}</span>
                     </div>
-                    <div className="text-xs font-mono text-green-300">
+                    <div className="text-xs font-mono text-green-600 dark:text-green-400">
                       [{client.quantizedVector.slice(0, 3).join(', ')}{client.quantizedVector.length > 3 ? '...' : ''}]
                     </div>
                   </div>
@@ -208,7 +208,7 @@ export function BonawitzTrainingSection({ currentStep }: Props) {
 
           <Card className="bg-purple-900/30 border-purple-500">
             <CardContent className="flex items-center justify-center">
-              <p className="text-center text-purple-200">
+              <p className="text-center text-purple-900 dark:text-purple-200">
                 <strong>Next:</strong> Clients will now begin the secure aggregation protocol to combine their gradients without revealing individual values.
               </p>
             </CardContent>

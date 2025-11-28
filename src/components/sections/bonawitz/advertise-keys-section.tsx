@@ -64,17 +64,14 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                         <div className="font-mono mt-1">
                           <div>
                             1. Pick random:{" "}
-                            <span className="text-yellow-300">
-                              <MathTex>{"a_1 = "}</MathTex>{keyPair.private.toString()}
+                            <span className="text-yellow-600 dark:text-yellow-200">
+                              <MathTex>{"a_1 = "}</MathTex> {keyPair.private.toString()}
                             </span>
                           </div>
                           <div>
                             2. Compute:{" "}
-                            <span className="text-green-300">
-                              <MathTex>{"A_1 = "}</MathTex>{config.dhGenerator.toString()}^
-                              {keyPair.private.toString()} mod{" "}
-                              {config.dhPrime.toString()} ={" "}
-                              {keyPair.public.toString()}
+                            <span className="text-green-600 dark:text-green-200">
+                              <MathTex>{`A_1 = ${config.dhGenerator.toString()}^{${keyPair.private.toString()}} \\bmod ${config.dhPrime.toString()} = ${keyPair.public.toString()}`}</MathTex>
                             </span>
                           </div>
                         </div>
@@ -125,7 +122,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <span className="text-muted-foreground">Prime (p):</span>
-                    <div className="text-blue-300 break-all">
+                    <div className="text-blue-600 dark:text-blue-200 break-all">
                       {config.dhPrime.toString()}
                     </div>
                     <span className="text-xs text-muted-foreground">
@@ -134,7 +131,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   </div>
                   <div>
                     <span className="text-muted-foreground">Generator (g):</span>
-                    <div className="text-green-300">
+                    <div className="text-green-600 dark:text-green-200">
                       {config.dhGenerator.toString()}
                     </div>
                     <span className="text-xs text-muted-foreground">
@@ -179,7 +176,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           <span className="text-muted-foreground">
                             Private <MathTex>{"a_u"}</MathTex>:
                           </span>
-                          <span className="text-yellow-300 ml-1">
+                          <span className="text-yellow-600 dark:text-yellow-200 ml-1">
                             {keyPair?.private?.toString() || "..."}
                           </span>
                         </div>
@@ -187,7 +184,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           <span className="text-muted-foreground">
                             Public <MathTex>{"A_u"}</MathTex>:
                           </span>
-                          <span className="text-green-300 ml-1">
+                          <span className="text-green-600 dark:text-green-200 ml-1">
                             {keyPair?.public?.toString() || "..."}
                           </span>
                         </div>
@@ -276,8 +273,8 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
 
               {/* Live Example using Client 1's DH Private Key */}
               <div className="bg-muted p-4 rounded-lg border border-purple-500/30">
-                <p className="font-semibold text-purple-300 mb-3">
-                  Live Example: Sharing Client 1's Private Key (<MathTex>{"T = "}</MathTex> {config.T}, <MathTex>{"N = "}</MathTex> {config.N})
+                <p className="font-semibold text-purple-600 dark:text-purple-200 mb-3">
+                  Live Example: Sharing Client 1's Private Key (<MathTex>{`T = ${config.T.toString()}`}</MathTex>, <MathTex>{`N = ${config.N.toString()}`}</MathTex>)
                 </p>
                 {(() => {
                   // Use actual DH private key from protocol as the secret
@@ -327,7 +324,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                     <div className="space-y-3 text-sm">
                       <div className="font-mono">
                         <span className="text-muted-foreground">Secret to share: </span>
-                        <span className="text-yellow-300">
+                        <span className="text-yellow-600 dark:text-yellow-200">
                           <MathTex>{"s = "}</MathTex> {secret} (Client 1's DH private key<MathTex>{"\\mod p"}</MathTex>)
                         </span>
                       </div>
@@ -337,7 +334,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                           Polynomial (degree {config.T - 1}) with random
                           coefficients:
                         </span>
-                        <div className="text-blue-300 mt-1 overflow-x-auto">
+                        <div className="text-blue-600 dark:text-blue-200 mt-1 overflow-x-auto">
                           <MathBlock>
                             {`f(x) = ${coeffs
                               .map((c, i) => {
@@ -371,13 +368,13 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                             >
                               <span
                                 className={`font-mono ${
-                                  x === 0 ? "text-yellow-300" : "text-green-300"
+                                  x === 0 ? "text-yellow-600 dark:text-yellow-200" : "text-green-600 dark:text-green-200"
                                 }`}
                               >
-                                f({x}) = {fx.toLocaleString()}
+                                <MathTex>{`f(${x}) = ${fx.toLocaleString()}`}</MathTex>
                               </span>
                               {x === 0 && (
-                                <span className="text-yellow-400 text-xs block">
+                                <span className="text-yellow-400 dark:text-yellow-200 text-xs block">
                                   (secret!)
                                 </span>
                               )}
@@ -393,7 +390,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                         <MathTex>{"f(2) = "}</MathTex>{" "}
                         {evaluations[2]?.fx.toLocaleString()}, etc.
                         <br />
-                        <strong className="text-green-300">
+                        <strong className="text-green-600 dark:text-green-200">
                           Any {config.T} shares
                         </strong>{" "}
                         can reconstruct
@@ -411,10 +408,10 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
           <div className="grid md:grid-cols-2 gap-4">
             <Card className="bg-purple-900/30 border-purple-500/50">
               <CardContent className="pt-2">
-                <p className="font-semibold text-purple-300 mb-2">
+                <p className="font-semibold text-purple-600 dark:text-purple-200 mb-2">
                   Private Key Shares
                 </p>
-                <p className="text-sm text-foreground/80">
+                <p className="text-sm text-purple-900 dark:text-purple-200">
                   Each client creates T-of-N shares of their DH private key{" "}
                   <MathTex>{"a_u"}</MathTex>. If client drops, others can
                   reconstruct <MathTex>{"a_u"}</MathTex> to compute pairwise
@@ -424,10 +421,10 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
             </Card>
             <Card className="bg-blue-900/30 border-blue-500/50">
               <CardContent className="pt-2">
-                <p className="font-semibold text-blue-300 mb-2">
+                <p className="font-semibold text-blue-600 dark:text-blue-200 mb-2">
                   Self-Mask Shares
                 </p>
-                <p className="text-sm text-foreground/80">
+                <p className="text-sm text-blue-900 dark:text-blue-200">
                   Each client creates T-of-N shares of their self-mask{" "}
                   <MathTex>{"b_u"}</MathTex>. If client drops, others can
                   reconstruct <MathTex>{"b_u"}</MathTex> to remove it from the
@@ -439,8 +436,8 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
 
           <Card className="bg-green-900/30 border-green-500">
             <CardContent className="flex items-center">
-              <p className="text-sm text-green-200">
-                <strong>Threshold:</strong> With <MathTex>{"T = "}</MathTex> {config.T} out of <MathTex>{"N = "}</MathTex> {config.N}, any <MathTex>{"T"}</MathTex> clients can reconstruct a dropped client's
+              <p className="text-sm text-green-900 dark:text-green-200">
+                <strong>Threshold:</strong> With <MathTex>{`T = ${config.T.toString()}`}</MathTex> out of <MathTex>{`N = ${config.N.toString()}`}</MathTex>, any <MathTex>{"T"}</MathTex> clients can reconstruct a dropped client's
                 secrets, but fewer than <MathTex>{"T"}</MathTex> clients learn nothing.
               </p>
             </CardContent>
@@ -624,8 +621,8 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                         <MathTex>{"x"}</MathTex>
                       </span>
                       <span
-                        className="absolute text-xs font-medium z-20 text-yellow-300"
-                        style={{ left: "1%", top: "40%" }}
+                        className="absolute text-xs font-medium z-20 text-yellow-600 dark:text-yellow-200"
+                        style={{ left: "1%", top: "10%" }}
                       >
                         Secret
                       </span>
@@ -639,7 +636,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
 
                     <p className="text-sm text-center text-foreground/80 mt-4">
                       The polynomial passes through all share points and{" "}
-                      <span className="text-yellow-300"><MathTex>{"f(0) = "}</MathTex> secret = {secret}</span>
+                      <span className="text-yellow-600 dark:text-yellow-200"><MathTex>{"f(0) = "}</MathTex> secret = {secret}</span>
                     </p>
                   </>
                 );
@@ -681,19 +678,19 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
 
               <div className="grid md:grid-cols-2 gap-4 mt-4">
                 <div className="bg-green-900/30 p-3 rounded-lg border border-green-500/30">
-                  <p className="font-semibold text-green-300 mb-2">
+                  <p className="font-semibold text-green-600 dark:text-green-200 mb-2">
                     Reconstruction Guarantee
                   </p>
-                  <p className="text-sm text-foreground/80">
-                    Any <strong><MathTex>{"T = "}</MathTex> {config.T}</strong> shares can exactly
+                  <p className="text-sm text-green-900 dark:text-green-200">
+                    Any <strong><MathTex>{`T = ${config.T.toString()}`}</MathTex></strong> shares can exactly
                     reconstruct the polynomial and recover <MathTex>{"f(0)"}</MathTex>
                   </p>
                 </div>
                 <div className="bg-red-900/30 p-3 rounded-lg border border-red-500/30">
-                  <p className="font-semibold text-red-300 mb-2">
+                  <p className="font-semibold text-red-900 dark:text-red-200 mb-2">
                     Security Property
                   </p>
-                  <p className="text-sm text-foreground/80">
+                  <p className="text-sm text-red-900 dark:text-red-200">
                     With <strong><MathTex>{"< T"}</MathTex></strong> shares, all possible secrets
                     are equally likely (perfect secrecy)
                   </p>
@@ -706,7 +703,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
 
       {/* Step 3: Public Key Broadcast */}
       <StepContent isActive={currentStep === 3} stepIndex={3}>
-        <div className="space-y-6">
+        <div className="space-y-6 pb-26">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-2">Public Key Broadcast</h2>
             <p className="text-muted-foreground">
@@ -751,7 +748,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
                   className="bg-muted p-6 rounded-xl border border-border"
                 >
                   <div className="text-center">
-                    <div className="text-lg font-bold text-purple-400 mb-2">
+                    <div className="text-lg font-bold text-purple-600 dark:text-purple-200 mb-2">
                       Server
                     </div>
                     <div className="text-sm text-muted-foreground">
@@ -774,7 +771,7 @@ export function BonawitzAdvertiseKeysSection({ currentStep }: Props) {
 
           <Card className="bg-blue-900/30 border-blue-500">
             <CardContent className="flex items-center justify-center">
-              <p className="text-center text-blue-200">
+              <p className="text-center text-blue-900 dark:text-blue-200">
                 <strong>Round 0 Complete:</strong> All clients have advertised
                 their public keys. Next, they will establish pairwise shared
                 secrets.

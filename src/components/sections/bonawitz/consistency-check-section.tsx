@@ -76,12 +76,12 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                 <Card className="bg-blue-900/30 border-blue-500">
                   <CardContent className="pt-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <Server className="h-5 w-5 text-blue-400" />
-                      <p className="font-semibold text-blue-300">
+                      <Server className="h-5 w-5 text-blue-600 dark:text-blue-200" />
+                      <p className="font-semibold text-blue-600 dark:text-blue-200">
                         Server's Role
                       </p>
                     </div>
-                    <p className="text-sm text-foreground/80">
+                    <p className="text-sm text-blue-900 dark:text-blue-200">
                       The server broadcasts the set <MathTex>{"U_3"}</MathTex> —
                       the list of clients who responded in Round 2 and are still
                       online.
@@ -92,12 +92,12 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                 <Card className="bg-green-900/30 border-green-500">
                   <CardContent className="pt-4">
                     <div className="flex items-center gap-2 mb-2">
-                      <Users className="h-5 w-5 text-green-400" />
-                      <p className="font-semibold text-green-300">
+                      <Users className="h-5 w-5 text-green-600 dark:text-green-200" />
+                      <p className="font-semibold text-green-600 dark:text-green-200">
                         Clients' Role
                       </p>
                     </div>
-                    <p className="text-sm text-foreground/80">
+                    <p className="text-sm text-green-900 dark:text-green-200">
                       Each client in <MathTex>{"U_3"}</MathTex> acknowledges
                       they will participate in Round 4 (unmasking phase).
                     </p>
@@ -106,8 +106,8 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
               </div>
 
               <Alert className="bg-yellow-900/30 border-yellow-500">
-                <AlertTriangle className="h-4 w-4 text-yellow-400" />
-                <AlertDescription className="text-yellow-200">
+                <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-200" />
+                <AlertDescription className="text-yellow-900 dark:text-yellow-200">
                   <strong>Critical for Security:</strong> Without this step,
                   clients wouldn't know whose self-masks need to be
                   reconstructed, potentially leading to incorrect aggregation or
@@ -139,7 +139,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                 <div className="bg-muted p-4 rounded-lg border-l-4 border-cyan-500">
                   <div className="flex items-center gap-2 mb-2">
                     <MathTex>{"U_2"}</MathTex>
-                    <span className="text-cyan-300 font-semibold">
+                    <span className="text-cyan-400 dark:text-cyan-200 font-semibold">
                       — Clients who submitted masked inputs
                     </span>
                   </div>
@@ -168,7 +168,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                 <div className="bg-muted p-4 rounded-lg border-l-4 border-green-500">
                   <div className="flex items-center gap-2 mb-2">
                     <MathTex>{"U_3"}</MathTex>
-                    <span className="text-green-300 font-semibold">
+                    <span className="text-green-400 dark:text-green-200 font-semibold">
                       — Clients alive after Round 3
                     </span>
                   </div>
@@ -199,7 +199,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                 <div className="bg-muted p-4 rounded-lg border-l-4 border-orange-500">
                   <div className="flex items-center gap-2 mb-2">
                     <MathTex>{"U_1 \\setminus U_2"}</MathTex>
-                    <span className="text-orange-300 font-semibold">
+                    <span className="text-orange-400 dark:text-orange-200 font-semibold">
                       — Early dropouts (before submitting)
                     </span>
                   </div>
@@ -215,7 +215,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                         <Badge
                           key={c.id}
                           variant="outline"
-                          className="border-orange-500 text-orange-300"
+                          className="border-orange-500 text-orange-400 dark:text-orange-200"
                         >
                           <WifiOff className="h-3 w-3 mr-1" />
                           {c.name}
@@ -237,7 +237,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                 <div className="bg-muted p-4 rounded-lg border-l-4 border-red-500">
                   <div className="flex items-center gap-2 mb-2">
                     <MathTex>{"U_2 \\setminus U_3"}</MathTex>
-                    <span className="text-red-300 font-semibold">
+                    <span className="text-red-400 dark:text-red-200 font-semibold">
                       — Late dropouts (after submitting)
                     </span>
                   </div>
@@ -253,7 +253,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                         <Badge
                           key={c.id}
                           variant="outline"
-                          className="border-red-500 text-red-300"
+                          className="border-red-500 text-red-400 dark:text-red-200"
                         >
                           <XCircle className="h-3 w-3 mr-1" />
                           {c.name}
@@ -292,8 +292,8 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                     <p
                       className={`font-semibold ${
                         u3Clients.length >= config.T
-                          ? "text-green-300"
-                          : "text-red-300"
+                          ? "text-green-600 dark:text-green-200"
+                          : "text-red-400 dark:text-red-200"
                       }`}
                     >
                       Threshold Check: |<MathTex>{"U_3"}</MathTex>|{" "}
@@ -304,7 +304,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                   <p className="text-sm text-foreground/80">
                     {u3Clients.length >= config.T ? (
                       <>
-                        <strong className="text-green-300">
+                        <strong className="text-green-600 dark:text-green-200">
                           Protocol can proceed!
                         </strong>{" "}
                         We have {u3Clients.length} alive clients, which is{" "}
@@ -350,9 +350,9 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                   className="bg-purple-900/50 p-6 rounded-xl border-2 border-purple-500"
                 >
                   <div className="flex items-center gap-3">
-                    <Server className="h-8 w-8 text-purple-400" />
+                    <Server className="h-8 w-8 text-purple-600 dark:text-purple-200" />
                     <div>
-                      <p className="font-bold text-purple-300 text-lg">
+                      <p className="font-bold text-purple-600 dark:text-purple-200 text-lg">
                         Server
                       </p>
                       <p className="text-sm text-muted-foreground">
@@ -383,7 +383,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                         </motion.div>
                       ))}
                   </div>
-                  <p className="text-sm text-purple-300 font-mono">
+                  <p className="text-sm text-purple-600 dark:text-purple-200 font-mono">
                     Clients in <MathTex>{"U_3"}</MathTex>: [{u3Clients.map(c => c.id).join(', ')}]
                   </p>
                 </motion.div>
@@ -428,14 +428,14 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                             {client.name}
                           </p>
                           {isInU3 ? (
-                            <Badge className="bg-green-600 text-xs">
+                            <Badge className="bg-green-600 text-xs w-[110px] justify-center">
                               <CheckCircle className="h-3 w-3 mr-1" />
                               In <MathTex>{"U_3"}</MathTex>
                             </Badge>
                           ) : isEarlyDropout ? (
                             <Badge
                               variant="outline"
-                              className="border-orange-500 text-orange-300 text-xs"
+                              className="border-orange-500 text-orange-600 dark:text-orange-400 text-xs w-[110px] justify-center"
                             >
                               <WifiOff className="h-3 w-3 mr-1" />
                               Early dropout
@@ -443,7 +443,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
                           ) : (
                             <Badge
                               variant="outline"
-                              className="border-red-500 text-red-300 text-xs"
+                              className="border-red-500 text-red-600 dark:text-red-400 text-xs w-[110px] justify-center"
                             >
                               <XCircle className="h-3 w-3 mr-1" />
                               Late dropout
@@ -506,7 +506,7 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
           </Card>
 
           <Alert className="bg-blue-900/30 border-blue-500">
-            <AlertDescription className="text-blue-200">
+            <AlertDescription className="text-blue-600 dark:text-blue-200">
               <strong>Round 3 Complete:</strong> All clients now know exactly
               who is in <MathTex>{"U_3"}</MathTex> and can proceed to Round 4
               (Unmasking) where the aggregate will be recovered.
@@ -514,8 +514,8 @@ export function BonawitzConsistencyCheckSection({ currentStep }: Props) {
           </Alert>
 
           <Card className="bg-purple-900/30 border-purple-500">
-            <CardContent className="flex items-center justify-center py-4">
-              <p className="text-center text-purple-200">
+            <CardContent className="flex items-center justify-center">
+              <p className="text-center text-purple-600 dark:text-purple-200">
                 <strong>Next:</strong> Alive clients in <MathTex>{"U_3"}</MathTex> will reveal their self-masks <MathTex>{"b_u"}</MathTex> directly,
                 while the server reconstructs dropped clients' masks via Shamir Secret Sharing to recover the true aggregate <MathTex>{"\\sum_{u \\in U_2} x_u"}</MathTex>.
               </p>
