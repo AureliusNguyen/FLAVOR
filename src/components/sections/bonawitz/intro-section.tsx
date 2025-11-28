@@ -115,7 +115,7 @@ export function BonawitzIntroSection({ currentStep }: Props) {
                       <div className="text-3xl">{item.icon}</div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-purple-300 border-purple-500">
+                          <Badge variant="outline" className="text-purple-900 dark:text-purple-200 border-purple-500">
                             Round {item.round}
                           </Badge>
                           <h3 className="font-semibold text-lg">{item.title}</h3>
@@ -152,14 +152,14 @@ export function BonawitzIntroSection({ currentStep }: Props) {
 
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div className="bg-blue-900/30 p-3 rounded">
-                  <p className="font-semibold text-blue-300 mb-1">Pairwise Masks (<MathTex>{"p_{uv}"}</MathTex>)</p>
+                  <p className="font-semibold text-blue-900 dark:text-blue-200 mb-1">Pairwise Masks (<MathTex>{"p_{uv}"}</MathTex>)</p>
                   <p className="text-foreground/80">
                     For each pair (<MathTex>{"u"}</MathTex>, <MathTex>{"v"}</MathTex>), client <MathTex>{"u"}</MathTex> adds <MathTex>{"+p_{uv}"}</MathTex> and client <MathTex>{"v"}</MathTex> subtracts <MathTex>{"-p_{uv}"}</MathTex>.
                     When summed, these cancel: <MathTex>{"(+p_{uv}) + (-p_{uv}) = 0"}</MathTex>
                   </p>
                 </div>
                 <div className="bg-purple-900/30 p-3 rounded">
-                  <p className="font-semibold text-purple-300 mb-1">Self Masks (<MathTex>{"b_u"}</MathTex>)</p>
+                  <p className="font-semibold text-purple-900 mb-1 dark:text-purple-200">Self Masks (<MathTex>{"b_u"}</MathTex>)</p>
                   <p className="text-foreground/80">
                     Each client adds a random self-mask <MathTex>{"b_u"}</MathTex> and secret-shares it.
                     If client drops, others can reconstruct <MathTex>{"b_u"}</MathTex> to remove it.
@@ -168,7 +168,7 @@ export function BonawitzIntroSection({ currentStep }: Props) {
               </div>
 
               <div className="bg-green-900/30 p-4 rounded-lg">
-                <p className="font-semibold text-green-300 mb-2">Result: Perfect Cancellation Among Participating Clients</p>
+                <p className="font-semibold text-green-900 dark:text-green-200 mb-2">Result: Perfect Cancellation Among Participating Clients</p>
                 <MathBlock>
                   {"\\sum_{u \\in U_2} y_u = \\sum_{u \\in U_2} x_u + \\underbrace{\\sum_{u \\in U_2}\\left(\\sum_{v>u} p_{uv} - \\sum_{v<u} p_{vu}\\right)}_{=0 \\text{ (cancels pairwise)}} + \\sum_{u \\in U_2} b_u"}
                 </MathBlock>

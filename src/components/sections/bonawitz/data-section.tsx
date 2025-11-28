@@ -375,7 +375,7 @@ export function BonawitzDataSection({ currentStep }: Props) {
                 <div className="w-24 text-xs font-medium text-muted-foreground">
                   Client
                 </div>
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((digit) => (
                   <div
                     key={digit}
                     className="flex-1 text-center text-xs font-medium"
@@ -407,23 +407,22 @@ export function BonawitzDataSection({ currentStep }: Props) {
                     </div>
                     {data.distribution.map((count, digit) => {
                       const intensity = count / maxCount;
-                      // Parse HSL color
+                      // Parse HSL color (bonawitz uses HSL with possible decimals)
                       const hslMatch = client.color.match(
-                        /hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)/
+                        /hsl\(([\d.]+),\s*([\d.]+)%,\s*([\d.]+)%\)/
                       );
-                      let bgColor = `rgba(100, 100, 255, ${intensity})`;
+                      let bgColor: string;
                       if (hslMatch) {
                         const [, h, s, l] = hslMatch;
                         bgColor = `hsla(${h}, ${s}%, ${l}%, ${intensity})`;
-                      } else if (client.color.startsWith("#")) {
-                        // Convert hex to RGBA
+                      } else {
+                        // Fallback for hex colors
                         const hex = client.color.replace("#", "");
                         const r = parseInt(hex.substring(0, 2), 16);
                         const g = parseInt(hex.substring(2, 4), 16);
                         const b = parseInt(hex.substring(4, 6), 16);
                         bgColor = `rgba(${r}, ${g}, ${b}, ${intensity})`;
                       }
-
                       return (
                         <div
                           key={digit}
@@ -450,8 +449,11 @@ export function BonawitzDataSection({ currentStep }: Props) {
           <Card className="bg-purple-500/20 border-purple-500/30 dark:bg-purple-900/30 dark:border-purple-500">
             <CardContent className="flex items-center justify-center">
               <p className="text-sm text-center text-purple-900 dark:text-purple-200">
-                Notice how each client has different primary digits - this is
-                non-IID distribution
+                Notice how each client has different primary digits. This is
+                non-IID (non-independent and identically distributed) data, where data points
+                are not drawn from the same underlying probability distribution. In federated
+                learning, this heterogeneity across clients violates key ML assumptions and
+                leads to challenges like slow convergence and poor generalization.
               </p>
             </CardContent>
           </Card>
@@ -563,8 +565,8 @@ export function BonawitzDataSection({ currentStep }: Props) {
           </Card>
 
           <Card className="bg-purple-900/30 border-purple-500">
-            <CardContent className="pt-6">
-              <p className="text-center text-blue-200">
+            <CardContent className="flex items-center justify-center">
+              <p className="text-center text-purple-900 dark:text-purple-200">
                 <strong>Goal:</strong> Compute{" "}
                 <MathTex>{"\\sum_{u=1}^{N} x_u"}</MathTex> without revealing
                 individual <MathTex>{"x_u"}</MathTex> gradients
