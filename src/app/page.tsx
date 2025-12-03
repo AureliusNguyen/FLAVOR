@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, BookOpen, Zap, Shield, Users } from 'lucide-react';
+import { ArrowRight, BookOpen, Zap, Shield, AlertTriangle, Clock } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 const workflows = [
@@ -24,7 +23,7 @@ const workflows = [
     ],
     color: 'from-blue-500 to-cyan-500',
     complexity: 'Beginner Friendly',
-    duration: '10-15 minutes',
+    duration: '5-7 minutes',
   },
   {
     id: 'bonawitz',
@@ -33,7 +32,7 @@ const workflows = [
     description: 'Full implementation of the Bonawitz et al. secure aggregation protocol with interactive client simulation and dropout recovery.',
     path: '/bonawitz-protocol',
     icon: Shield,
-    reference: 'arXiv:1611.04482',
+    reference: 'Bonawitz et al., ACM CCS 2017 (arXiv:1611.04482)',
     referenceUrl: 'https://arxiv.org/abs/1611.04482',
     features: [
       'Interactive protocol simulation',
@@ -43,8 +42,30 @@ const workflows = [
       'Real-time mask generation & cancellation',
     ],
     color: 'from-purple-500 to-pink-500',
+    badgeColor: 'bg-purple-900/20 text-purple-600 dark:text-purple-300 border-purple-500/30 hover:bg-purple-500/30',
     complexity: 'Advanced',
-    duration: '15-20 minutes',
+    duration: '7-10 minutes',
+  },
+  {
+    id: 'gradient-inversion',
+    title: 'Gradient Inversion Attack (2019)',
+    subtitle: 'How Shared Gradients Can Reveal Private Training Data',
+    description: 'Interactive demonstration of the Gradient Inversion (DLG) attack (Zhu et al., NeurIPS 2019) showing how shared gradients can leak private training data.',
+    path: '/gradient-inversion',
+    icon: AlertTriangle,
+    reference: 'Zhu et al., NeurIPS 2019 (arXiv:1906.08935)',
+    referenceUrl: 'https://arxiv.org/abs/1906.08935',
+    features: [
+      'Live gradient inversion attack demo',
+      'Multiple CNN architectures (Simple/LeNet/ResNet)',
+      'Batch size experiments (1, 2, 4, 8)',
+      'Interactive defense mechanisms',
+      'Secure aggregation as defense',
+    ],
+    color: 'from-red-500 to-orange-500',
+    badgeColor: 'bg-red-900/20 text-red-600 dark:text-orange-300 border-red-500/30 hover:bg-red-500/30',
+    complexity: 'Intermediate',
+    duration: '7-10 minutes',
   },
 ];
 
@@ -92,7 +113,7 @@ export default function HomePage() {
         </motion.div>
 
         {/* Workflow Cards */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {workflows.map((workflow, index) => (
             <motion.div
               key={workflow.id}
@@ -122,13 +143,13 @@ export default function HomePage() {
 
                   {/* always reserve space for the reference row */}
                   <div className="mb-3 h-8 flex items-center">
-                    {workflow.reference && workflow.referenceUrl && (
+                    {workflow.reference && workflow.referenceUrl && workflow.badgeColor && (
                       <a
                         href={workflow.referenceUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Badge className="bg-purple-500/20 text-purple-600 dark:text-purple-300 border-purple-500/30 hover:bg-purple-500/30 cursor-pointer transition-colors">
+                        <Badge className={`${workflow.badgeColor} cursor-pointer transition-colors`}>
                           {workflow.reference}
                         </Badge>
                       </a>
@@ -160,17 +181,23 @@ export default function HomePage() {
 
                   <div className="flex items-center justify-between pt-4 border-t border-border mt-auto">
                     <div className="flex items-center text-sm text-muted-foreground">
-                      <Users className="w-4 h-4 mr-1" />
+                      <Clock className="w-4 h-4 mr-1" />
                       {workflow.duration}
                     </div>
                     <Link href={workflow.path}>
-                      <Button
-                        variant="outline"
-                        className="font-semibold hover:border-primary hover:text-primary cursor-pointer group"
-                      >
-                        Start Learning
-                        <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
+                      <button className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-medium text-sm">
+                        {/* Shadow layer */}
+                        <span className="absolute top-0 left-0 w-full h-full bg-black/25 rounded-lg transform translate-y-0.5 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-active:translate-y-px" />
+
+                        {/* Background layer */}
+                        <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]" />
+
+                        {/* Foreground layer with workflow color */}
+                        <div className={`relative flex items-center justify-between py-2.5 px-4 text-white rounded-lg transform -translate-y-1 bg-gradient-to-r ${workflow.color} gap-2 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110`}>
+                          <span className="select-none">Start Learning</span>
+                          <ArrowRight className="w-4 h-4 transition duration-250 group-hover:translate-x-1" />
+                        </div>
+                      </button>
                     </Link>
                   </div>
                 </CardContent>
