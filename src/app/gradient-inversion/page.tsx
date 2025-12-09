@@ -10,14 +10,14 @@ import { MNISTProvider } from "@/context/mnist-context";
 
 // Gradient Inversion sections
 import { GradientInversionIntroSection } from "@/components/sections/gradient-inversion/intro-section";
-import { ThreatModelSection } from "@/components/sections/gradient-inversion/threat-model-section";
-import { AlgorithmSection } from "@/components/sections/gradient-inversion/algorithm-section";
-import { ModelSetupSection } from "@/components/sections/gradient-inversion/model-setup-section";
-import { AttackDemoSection } from "@/components/sections/gradient-inversion/attack-demo-section";
-import { BatchAttackSection } from "@/components/sections/gradient-inversion/batch-attack-section";
-import { DefenseSection } from "@/components/sections/gradient-inversion/defense-section";
-import { BonawitzDefenseSection } from "@/components/sections/gradient-inversion/bonawitz-defense-section";
-import { ConclusionSection } from "@/components/sections/gradient-inversion/conclusion-section";
+// import { ThreatModelSection } from "@/components/sections/gradient-inversion/threat-model-section";
+// import { AlgorithmSection } from "@/components/sections/gradient-inversion/algorithm-section";
+// import { ModelSetupSection } from "@/components/sections/gradient-inversion/model-setup-section";
+// import { AttackDemoSection } from "@/components/sections/gradient-inversion/attack-demo-section";
+// import { BatchAttackSection } from "@/components/sections/gradient-inversion/batch-attack-section";
+// import { DefenseSection } from "@/components/sections/gradient-inversion/defense-section";
+// import { BonawitzDefenseSection } from "@/components/sections/gradient-inversion/bonawitz-defense-section";
+// import { ConclusionSection } from "@/components/sections/gradient-inversion/conclusion-section";
 
 // Section configuration following paper structure
 const sections = [
