@@ -22,14 +22,14 @@ import { GradientInversionIntroSection } from "@/components/sections/gradient-in
 // Section configuration following paper structure
 const sections = [
   { id: "intro", title: "Intro", steps: 3, component: GradientInversionIntroSection },
-  { id: "threat-model", title: "Threat Model", steps: 4, component: ThreatModelSection },
-  { id: "algorithm", title: "Algorithm", steps: 4, component: AlgorithmSection },
-  { id: "model-setup", title: "Model Setup", steps: 3, component: ModelSetupSection },
-  { id: "attack-demo", title: "Attack Demo", steps: 4, component: AttackDemoSection },
-  { id: "batch-attack", title: "Batch Attack", steps: 3, component: BatchAttackSection },
-  { id: "defenses", title: "Defenses", steps: 5, component: DefenseSection },
-  { id: "crypto-defense", title: "Crypto Defense", steps: 5, component: BonawitzDefenseSection },
-  { id: "conclusion", title: "Conclusion", steps: 4, component: ConclusionSection },
+  // { id: "threat-model", title: "Threat Model", steps: 4, component: ThreatModelSection },
+  // { id: "algorithm", title: "Algorithm", steps: 4, component: AlgorithmSection },
+  // { id: "model-setup", title: "Model Setup", steps: 3, component: ModelSetupSection },
+  // { id: "attack-demo", title: "Attack Demo", steps: 4, component: AttackDemoSection },
+  // { id: "batch-attack", title: "Batch Attack", steps: 3, component: BatchAttackSection },
+  // { id: "defenses", title: "Defenses", steps: 5, component: DefenseSection },
+  // { id: "crypto-defense", title: "Crypto Defense", steps: 5, component: BonawitzDefenseSection },
+  // { id: "conclusion", title: "Conclusion", steps: 4, component: ConclusionSection },
 ];
 
 const sectionTitles = sections.map((s) => s.title);
